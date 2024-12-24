@@ -1,0 +1,39 @@
+# Node.js layihələri üçün ümumi
+node_modules/
+.env
+dist/
+build/
+
+# Sistem faylları
+.DS_Store
+Thumbs.db
+
+# Log faylları
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE və editor faylları
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp fayllar
+*.tmp
+*.temp
+
+# Operating system-specific
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~

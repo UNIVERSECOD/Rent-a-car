@@ -42,15 +42,17 @@ const register = async (req: Request, res: Response) => {
 };
 
 const login = async (req: Request, res: Response) => {
-  const user = req.user.toObject();
-  delete user.password;
-  delete user.resetPasswordToken;
-  delete user.resetPasswordTokenExpires;
+const user = req.user
+  // const user = req.user.toObject();
+  // delete user.password;
+  // delete user.resetPasswordToken;
+  // delete user.resetPasswordTokenExpires;
   res.send({ message: "User logged in successfully", user });
 };
 
 const currentUser = async (req: Request, res: Response) => {
-  const user = req.user.toObject();
+  const user = req.user
+  // const user = req.user.toObject();
   user.avatar = `${process.env.BASE_URL}${user.avatar}`;
 
   res.json({ user });
@@ -79,7 +81,7 @@ const forgotPassword = async (req: Request, res: Response) => {
     const token = crypto.randomBytes(32).toString("hex");
 
     user.resetPasswordToken = token;
-    user.resetPasswordTokenExpires = Date.now() + 1000 * 60 * 15;
+    user.resetPasswordTokenExpires = new Date(Date.now() + 1000 * 60 * 15);
 
     await user.save();
 
@@ -185,8 +187,8 @@ const resetPassword = async (req: Request, res: Response) => {
     }
 
     user.password = hashPassword(password);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordTokenExpires = undefined;
+    user.resetPasswordToken = "";
+    user.resetPasswordTokenExpires = new Date(0);
 
     await user.save();
 

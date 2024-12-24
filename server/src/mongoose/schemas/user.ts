@@ -19,12 +19,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  friends: [
-    {
-      type: Types.ObjectId,
-      ref: "User",
-    },
-  ],
   password: {
     type: String,
     required: true,

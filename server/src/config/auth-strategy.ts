@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import User from "../mongoose/schemas/user";
 import { comparePassword } from "../utils/bcrypt";
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function (user: IUser, done) {
   done(null, user.id);
 });
 

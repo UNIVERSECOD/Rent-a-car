@@ -9,7 +9,7 @@ import "./config/db"
 
 
 // import { initalizeSocket } from "./socket/index.mjs";
-// import authRoutes from "./routes/auth.mjs";
+import authRoutes from "./routes/auth";
 // import postRoutes from "./routes/post.mjs";
 // import commentRoutes from "./routes/comment.mjs";
 // import userRoutes from "./routes/user.mjs";
@@ -38,6 +38,8 @@ app.use(
   );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use("/auth", authRoutes)
 
 app.listen(3000, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

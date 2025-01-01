@@ -6,6 +6,8 @@ import { createLocationSchema } from "../validation/location";
 
 const router = Router();
 
+router.get("/", locationController.getAll);
+
 router.post(
   "/",
   authorize({ isAdmin: true }),
@@ -13,7 +15,7 @@ router.post(
   locationController.create
 );
 router.delete(
-    "/id",
+    "/:id",
     authorize({ isAdmin: true }),
     locationController.remove
   );

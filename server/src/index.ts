@@ -13,6 +13,8 @@ import "./config/auth-strategy"
 // import { initalizeSocket } from "./socket/index.mjs";
 import authRoutes from "./routes/auth";
 import locationRoutes from "./routes/location";
+import categoryRoutes from "./routes/category";
+
 
 const app = express();
 dotenv.config();
@@ -39,6 +41,7 @@ app.use(passport.session());
 
 app.use("/auth", authRoutes)
 app.use("/locations", locationRoutes)
+app.use("/categories", categoryRoutes)
 
 
 app.listen(3000, () => {

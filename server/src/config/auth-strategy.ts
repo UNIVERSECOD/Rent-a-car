@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import User from "../mongoose/schemas/user";
 import { comparePassword } from "../utils/bcrypt";
+import { UserRole } from "../types/user";
 
 passport.serializeUser(function (user, done) {
   done(null, user._id);
@@ -20,6 +21,7 @@ passport.deserializeUser(async function (id, done) {
       {
         ...(user.toObject() ?? {} ),
         _id:user._id.toString(),
+        role: user.role as UserRole,
         resetPasswordTokenExpires: undefined,
         password: undefined,
         resetPasswordToken: undefined,
@@ -52,6 +54,7 @@ passport.use(
         return done(null, {
           ...(user.toObject() ?? {} ),
           _id:user._id.toString(),
+          role: user.role as UserRole,
           resetPasswordTokenExpires: undefined,
           password: undefined,
           resetPasswordToken: undefined,

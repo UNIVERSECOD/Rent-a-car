@@ -10,4 +10,10 @@ _id: string;
   resetPasswordTokenExpires?: string; 
   createdAt: string; 
   updatedAt: string; 
+  role: UserRole;
+}
+
+export enum UserRole {
+  USER = "user",
+  ADMIN = "admin",
 }

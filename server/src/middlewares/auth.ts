@@ -1,13 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import passport from "passport";
-import { IUser } from "../types/user";
+import { IUser, UserRole } from "../types/user";
 
-export const authorize = () => {
+export const authorize = (options?: {isAdmin?: boolean}) => {
+  const isAdmin = !!options?.isAdmin;
   return async (req: Request, res:Response, next:NextFunction) => {
     try {
       if (!req.isAuthenticated()) {
        res.status(401).json({ message: "Unauthorized!" });
        return;
+      }
+
+      if (isAdmin && req.user?.role !== UserRole.ADMIN){
+        res.status(403).json({ message: "Contact with Admin!" });
+        return;
       }
 
       next();

@@ -12,11 +12,7 @@ import "./config/auth-strategy"
 
 // import { initalizeSocket } from "./socket/index.mjs";
 import authRoutes from "./routes/auth";
-
-// import commentRoutes from "./routes/comment.mjs";
-// import userRoutes from "./routes/user.mjs";
-// import friendShipRoutes from "./routes/friendship.mjs";
-// import conversationRoutes from "./routes/conversation.mjs";
+import locationRoutes from "./routes/location";
 
 const app = express();
 dotenv.config();
@@ -42,6 +38,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes)
+app.use("/locations", locationRoutes)
+
 
 app.listen(3000, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

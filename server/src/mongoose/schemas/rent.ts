@@ -5,10 +5,53 @@ const rentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
+  fuel: {
+    type: String,
+    required: true,
+  },
+  gear: {
+    type: String,
+    required: true,
+  },
+  capacity: {
+    type: Number,
+    required: true,
+  },
+  imageUrls: {
+    type: [String],
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  discountPrice: {
+    type: Number,
+    optional: true,
+    default: null,
+  },
   category: {
     type: Types.ObjectId,
     ref: "Category",
     required: true,
+  },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  pickUpLocations: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Locations",
+    default: [],
+  },
+  dropOffLocations: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Locations",
+    default: [],
   },
   createdAt: {
     type: Date,

@@ -31,6 +31,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  favorites: {
+    type: [Types.ObjectId],
+    ref: "Rent",
+    default: [],
+  },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

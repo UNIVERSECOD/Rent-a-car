@@ -5,12 +5,14 @@ import { createServer } from "node:http";
 import passport from "passport";
 import express from "express";
 import cors from "cors";
+
 import "./config/db"
+import "./config/auth-strategy"
 
 
 // import { initalizeSocket } from "./socket/index.mjs";
 import authRoutes from "./routes/auth";
-// import postRoutes from "./routes/post.mjs";
+
 // import commentRoutes from "./routes/comment.mjs";
 // import userRoutes from "./routes/user.mjs";
 // import friendShipRoutes from "./routes/friendship.mjs";

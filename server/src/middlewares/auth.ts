@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import passport from "passport";
+import { IUser } from "../types/user";
 
 export const authorize = () => {
   return async (req: Request, res:Response, next:NextFunction) => {
@@ -18,13 +19,13 @@ export const authorize = () => {
 };
 
 export const authenticate = (req: Request, res:Response, next:NextFunction) =>
-  passport.authenticate("local", function (err: Error, user, info: { message?: string}) {
+  passport.authenticate("local", function (err: Error, user:IUser, info: { message?: string}) {
     if (err) {
      res.status(500).json({ message: "Internal server error!" });
      return;
     }
     if (info?.message || !user) {
-     res.status(401).json({ message: info?.error || "Unauthorized!" });
+     res.status(401).json({ message: info?.message || "Unauthorized!" });
      return;
     }
 

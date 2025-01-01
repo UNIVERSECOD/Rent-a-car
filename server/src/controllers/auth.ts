@@ -43,17 +43,13 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
 const user = req.user
-  // const user = req.user.toObject();
-  // delete user.password;
-  // delete user.resetPasswordToken;
-  // delete user.resetPasswordTokenExpires;
   res.send({ message: "User logged in successfully", user });
 };
 
 const currentUser = async (req: Request, res: Response) => {
   const user = req.user
   // const user = req.user.toObject();
-  user.avatar = `${process.env.BASE_URL}${user.avatar}`;
+  // user.avatar = `${process.env.BASE_URL}${user.avatar}`;
 
   res.json({ user });
 };

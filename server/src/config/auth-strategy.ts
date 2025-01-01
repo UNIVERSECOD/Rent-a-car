@@ -3,8 +3,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 import User from "../mongoose/schemas/user";
 import { comparePassword } from "../utils/bcrypt";
 
-passport.serializeUser(function (user: IUser, done) {
-  done(null, user.id);
+passport.serializeUser(function (user, done) {
+  done(null, user._id);
 });
 
 passport.deserializeUser(async function (id, done) {
@@ -16,7 +16,17 @@ passport.deserializeUser(async function (id, done) {
       return done(null, false);
     }
 
-    done(null, user);
+    done(null,
+      {
+        ...(user.toObject() ?? {} ),
+        _id:user._id.toString(),
+        resetPasswordTokenExpires: undefined,
+        password: undefined,
+        resetPasswordToken: undefined,
+        createdAt: user.createdAt?.toString(),
+        updatedAt: user.updatedAt?.toString(),
+     }
+    );
   } catch (error) {
     done(error);
   }
@@ -39,7 +49,15 @@ passport.use(
           return done(null, false, { message: "Invalid Credentials!" });
         }
 
-        return done(null, user);
+        return done(null, {
+          ...(user.toObject() ?? {} ),
+          _id:user._id.toString(),
+          resetPasswordTokenExpires: undefined,
+          password: undefined,
+          resetPasswordToken: undefined,
+          createdAt: user.createdAt?.toString(),
+          updatedAt: user.updatedAt?.toString(),
+        });
       } catch (error) {
         done(error);
       }

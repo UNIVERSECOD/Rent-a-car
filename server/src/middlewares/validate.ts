@@ -6,6 +6,7 @@ import {
   Schema,
 } from "express-validator";
 import fs from "fs";
+import { deleteFiles } from "../utils/file";
 
 const validateSchema = (schema: Schema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -13,15 +14,7 @@ const validateSchema = (schema: Schema) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       if (req.files) {
-        const files = req.files as Express.Multer.File[];
-        files.forEach((file: Express.Multer.File) => {
-          fs.unlink(file.path, (err) => {
-            if (err) {
-              console.error(err);
-            }
-            console.log("File deleted");
-          });
-        });
+       deleteFiles(req.files as Express.Multer.File[])
       }
 
       res.status(400).json({ errors: errors.array() });

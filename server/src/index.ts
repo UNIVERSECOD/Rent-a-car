@@ -40,6 +40,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/public", express.static("./public"))
 app.use("/auth", authRoutes)
 app.use("/locations", locationRoutes)
 app.use("/categories", categoryRoutes)

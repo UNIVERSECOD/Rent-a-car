@@ -3,12 +3,12 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/images/post");
+    cb(null, "public/rent");
   },
   filename: function (req, file, cb) {
     const fileExtension = file.originalname.split(".").pop();
     const uniqueSuffix = uuidv4() + "." + fileExtension;
-    const fileName = "post-" + uniqueSuffix;
+    const fileName = "rent-" + uniqueSuffix;
     cb(null, fileName);
   },
 });

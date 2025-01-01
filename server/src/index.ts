@@ -14,6 +14,7 @@ import "./config/auth-strategy"
 import authRoutes from "./routes/auth";
 import locationRoutes from "./routes/location";
 import categoryRoutes from "./routes/category";
+import rentRoutes from "./routes/rent";
 
 
 const app = express();
@@ -42,6 +43,8 @@ app.use(passport.session());
 app.use("/auth", authRoutes)
 app.use("/locations", locationRoutes)
 app.use("/categories", categoryRoutes)
+app.use("/rents", rentRoutes)
+
 
 
 app.listen(3000, () => {

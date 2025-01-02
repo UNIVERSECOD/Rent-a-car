@@ -3,18 +3,105 @@ import Rent from "../mongoose/schemas/rent";
 import Category from "../mongoose/schemas/category";
 import Location from "../mongoose/schemas/location";
 import { deleteFiles, deleteFilesByPaths } from "../utils/file";
+import { RootFilterQuery } from "mongoose";
 
 const getAll = async (req: Request, res: Response) => {
   try {
-   
+    const {
+      search,
+      dropOffLocation,
+      pickUpLocation,
+      maxPrice,
+      minPrice,
+      categories,
+      capacities,
+      skip=0,
+      take=10,
+    } = req.matchedData;
+    // const { search } = req.query;
+    const filter: RootFilterQuery<any> = {
+      $or: [],
+      $and: [],
+    };
 
-    const rents = await Rent.find();
+    if (search) {
+      filter.$or?.push({
+        title: {
+          $regex: search as string,
+          $options: "i",
+        },
+      });
+      filter.$or?.push({
+        description: {
+          $regex: search as string,
+          $options: "i",
+        },
+      });
+    }
+
+    if (dropOffLocation) {
+      filter.$and?.push({
+        dropOffLocations: {
+          $in: [dropOffLocation],
+        },
+      });
+    }
+
+    if (pickUpLocation) {
+      filter.$and?.push({
+        pickUpLocations: {
+          $in: [pickUpLocation],
+        },
+      });
+    }
+
+    if (capacities?.length) {
+      filter.$and?.push({
+        capacity: {
+          $in: capacities,
+        },
+      });
+    }
+
+    if (categories?.length) {
+      filter.$and?.push({
+        category: {
+          $in: categories,
+        },
+      });
+    }
+
+    if (maxPrice) {
+      filter.$and?.push({
+        price: {
+          $lte: maxPrice,
+        },
+      });
+    }
+
+    if (minPrice) {
+      filter.$and?.push({
+        price: {
+          $gte: minPrice,
+        },
+      });
+    }
+
+    const rents = await Rent.find(filter).populate([
+      "category",
+      "dropOffLocations",
+      "pickUpLocations",
+    ]).skip(skip).limit(take);
+
+    const count = await Rent.countDocuments(filter)
+
     res.status(200).json({
       message: "Rents retrieved successfully!",
-      items: rents.map((rent) =>({
+      count,
+      items: rents.map((rent) => ({
         ...rent.toObject(),
-        imageUrls: rent.imageUrls.map((url) => `${process.env.BASE_URL}${url}`
-    )})),
+        imageUrls: rent.imageUrls.map((url) => `${process.env.BASE_URL}${url}`),
+      })),
     });
   } catch (err) {
     console.log(err);
@@ -48,11 +135,14 @@ const create = async (req: Request, res: Response) => {
         _id: {
           $in: dropOffLocations,
         },
-      })
-    ]
+      }),
+    ];
 
-    const [categoryExists,pickUpLocationsExistCount, dropOffLocationsExistCount  ] = await Promise.all(promises)
-
+    const [
+      categoryExists,
+      pickUpLocationsExistCount,
+      dropOffLocationsExistCount,
+    ] = await Promise.all(promises);
 
     if (!categoryExists) {
       deleteFiles(req.files as Express.Multer.File[]);
@@ -84,7 +174,12 @@ const create = async (req: Request, res: Response) => {
       dropOffLocations,
       pickUpLocations,
       imageUrls: (req.files as Express.Multer.File[]).map((file) => file.path),
-    })
+    });
+
+    if(typeof categoryExists !== "number"){
+      categoryExists.rents.push(rent._id);
+      await categoryExists.save();
+    }
 
     res.status(201).json({ message: "Rent created successfully!" });
   } catch (err) {
@@ -94,7 +189,7 @@ const create = async (req: Request, res: Response) => {
 
 const remove = async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const rent = await Rent.findByIdAndDelete(id);
     if (!rent) {
       res.status(404).json({ message: "Rent not found" });

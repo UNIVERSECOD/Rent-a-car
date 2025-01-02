@@ -45,12 +45,12 @@ const rentSchema = new mongoose.Schema({
   },
   pickUpLocations: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Locations",
+    ref: "Location",
     default: [],
   },
   dropOffLocations: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: "Locations",
+    ref: "Location",
     default: [],
   },
   createdAt: {

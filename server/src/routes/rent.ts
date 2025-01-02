@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { authorize } from "../middlewares/auth";
 import validateSchema from "../middlewares/validate";
-import { createRentSchema } from "../validation/rent";
+import { createRentSchema, getAllRentsSchema } from "../validation/rent";
 import rentController from "../controllers/rent";
 import { upload } from "../middlewares/upload";
 
 const router = Router();
 
-router.get("/", rentController.getAll);
+router.get("/", validateSchema(getAllRentsSchema),
+   rentController.getAll);
 
 router.post(
   "/",

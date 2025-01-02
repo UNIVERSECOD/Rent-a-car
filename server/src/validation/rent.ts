@@ -1,5 +1,71 @@
 import { Schema } from "express-validator";
 
+export const getAllRentsSchema: Schema = {
+  skip: {
+   in: ["query"],
+    optional: true,
+    isNumeric: true,
+    default:{
+      options: 0,
+    },
+  },
+  take:{
+    in: ["query"],
+    optional: true,
+    isNumeric: true,
+    default:{
+      options: 0,
+    },
+  },
+  search: {
+    in: ["query"],
+    optional: true,
+    isString: true,
+  },
+  dropOffLocation: {
+    in: ["query"],
+    optional: true,
+    isMongoId: true,
+  },
+  pickUpLocation: {
+    in: ["query"],
+    optional: true,
+    isMongoId: true,
+  },
+  categories: {
+    in: ["query"],
+    optional: true,
+    isArray: true,
+    custom: {
+      errorMessage: "Categories should be an array of mongo identifiers",
+      options: (value) => {
+        return value && value.every((v:string) => v.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i));
+      },
+    }, 
+  },
+  capacities: {
+    in: ["query"],
+    optional: true,
+    isArray: true,
+    custom: {
+      errorMessage: "Capacity should be an array of numbers",
+      options: (value) => {
+        return  value.every((v: string) => !isNaN(parseInt(v)));
+      },
+    }
+  },
+  maxPrice: {
+    in: ["query"],
+    optional: true,
+    isNumeric: true,
+  },
+  minPrice: {
+    in: ["query"],
+    optional: true,
+    isNumeric: true,
+  },
+}
+
 export const createRentSchema: Schema = {
   images: {
     custom: {

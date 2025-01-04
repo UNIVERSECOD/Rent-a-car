@@ -15,13 +15,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserRole } from "@/types";
+import { RenderIf } from "../RenderIf";
 import { paths } from "@/constants/paths";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { logoutAsync, selectAuth } from "@/store/auth";
+import { Spinner } from "../Spinner";
 
 export const NavbarActions = () => {
   const { openDialog } = useDialog();
+  const { user, loading } = useAppSelector(selectAuth);
+  const dispatch = useAppDispatch();
+
+  function handleLogout() {
+    dispatch(logoutAsync());
+  }
 
   return (
-    <div className="flex gap-3 lg:gap-5">
+    <div className="flex items-center gap-3 lg:gap-5">
       <Link
         to="/"
         className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5"
@@ -40,38 +50,48 @@ export const NavbarActions = () => {
       >
         <img src={SettingsIcon} alt="settings icon" />
       </Link>
-      <Button onClick={() => openDialog(DialogTypeEnum.LOGIN)}>Sign In</Button>
+      {/* <Button onClick={() => openDialog(DialogTypeEnum.LOGIN)}>Sign In</Button> */}
 
-      {/* {user ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5">
-              <User2Icon color="#596780" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {user.role === UserRole.Admin && (
-              <DropdownMenuItem asChild>
-                <Link to={paths.DASHBOARD.MAIN}>Dashboard</Link>
+      <RenderIf condition={loading}>
+        <Spinner />
+      </RenderIf>
+      <RenderIf condition={!loading}>
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5">
+                <User2Icon color="#596780" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {user.role === UserRole.Admin && (
+                <DropdownMenuItem asChild>
+                  <Link to={paths.DASHBOARD.MAIN}>Dashboard</Link>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem>
+                <Link to="/profile">Profile</Link>
               </DropdownMenuItem>
-            )}
-            <DropdownMenuItem>
-              <Link to="/profile">Profile</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link to="/reservations">Reservations</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
-              <LogOutIcon />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <Button onClick={() => openDialog(DialogTypeEnum.LOGIN)}>Sign In</Button>
-      )} */}
+              <DropdownMenuItem>
+                <Link to="/reservations">Reservations</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={handleLogout}
+              >
+                <LogOutIcon />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button onClick={() => openDialog(DialogTypeEnum.LOGIN)}>
+            Sign In
+          </Button>
+        )}
+      </RenderIf>
     </div>
   );
 };

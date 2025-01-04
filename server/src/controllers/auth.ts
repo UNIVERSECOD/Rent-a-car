@@ -22,7 +22,7 @@ const register = async (req: Request, res: Response) => {
       res
         .status(400)
         .json({ message: "User with this email&username already exists" });
-        return;
+      return;
     }
 
     const user = new User({
@@ -42,14 +42,13 @@ const register = async (req: Request, res: Response) => {
 };
 
 const login = async (req: Request, res: Response) => {
-const user = req.user
+  const user = req.user;
   res.send({ message: "User logged in successfully", user });
 };
 
 const currentUser = async (req: Request, res: Response) => {
-  const user = req.user
-  // const user = req.user.toObject();
-  // user.avatar = `${process.env.BASE_URL}${user.avatar}`;
+  const user = req.user;
+  if (user?.avatar) user.avatar = `${process.env.BASE_URL}${user.avatar}`;
 
   res.json({ user });
 };
@@ -70,8 +69,8 @@ const forgotPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-     res.status(404).json({ message: "User not found!" });
-     return;
+      res.status(404).json({ message: "User not found!" });
+      return;
     }
 
     const token = crypto.randomBytes(32).toString("hex");

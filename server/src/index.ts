@@ -19,12 +19,16 @@ import rentRoutes from "./routes/rent";
 
 const app = express();
 dotenv.config();
-
- cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-  ;
+//  cors({  
+//     origin:  process.env.CLIENT_URL,
+//     credentials: true,
+//   })
+//   ;
+const corsOptions = {  
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(

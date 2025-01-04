@@ -22,6 +22,10 @@ import {
 } from "@/components/ui/form";
 import { useMutation } from "@tanstack/react-query";
 import authService from "@/services/auth";
+import { log } from "console";
+import { AxiosError } from "axios";
+import { RegisterResponse } from "@/services/auth/types";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
@@ -39,7 +43,14 @@ const formSchema = z
 export const RegisterDialog = () => {
   const {mutate, isPending} = useMutation({
     mutationFn: authService.register,
-    onSuccess: () => {},
+    onSuccess: (response) => {
+      toast.success(response.data.message);
+      openDialog(DialogTypeEnum.LOGIN)
+      
+    },
+    onError: (error: AxiosError<RegisterResponse>) => {
+      toast.error(error.response?.data?.message ?? "Something went wrong" );
+    },
   })
   const { isOpen, closeDialog, type, openDialog } = useDialog();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,12 +70,14 @@ export const RegisterDialog = () => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
+       
     const data = {
       name: values.name,
       username: values.surname,
       email: values.email,
       password: values.password,
     };
+    // console.log(values);
     mutate(data)
   }
 

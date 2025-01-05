@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export type User = {
   _id: string;
   name: string;
@@ -11,14 +13,14 @@ export type User = {
 export type Location = {
   _id: string;
   createdAt: string;
-  name: string;
+  title: string;
 };
 
 export type Category = {
   _id: string;
   createdAt: string;
-  name: string;
-  count: number;
+  title: string;
+  rents: Rent[] | string[];
 };
 
 export type Rent = {
@@ -34,7 +36,7 @@ export type Rent = {
   discount: number;
   category: Category;
   dropOffLocations: Location[];
-  images: string[];
+  imageUrls: string[];
   pickUpLocation: Location;
   showInRecommendation: boolean;
   reviews: Review[];
@@ -115,3 +117,8 @@ export enum ReviewStatus {
   Approved = "approved",
   Rejected = "rejected",
 }
+
+export type AxiosResponseError = AxiosError<{
+  message: string;
+  
+}>

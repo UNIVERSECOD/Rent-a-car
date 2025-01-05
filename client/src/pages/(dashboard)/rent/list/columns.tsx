@@ -11,7 +11,7 @@ export const columns: ColumnDef<Rent>[] = [
     cell: (data) => {
       return (
         <img
-          src={data.row.original.images[0]}
+          src={data.row.original.imageUrls?.[0]}
           alt={"Rent Picture"}
           className="w-10 h-10 object-cover rounded-lg"
         />
@@ -19,11 +19,11 @@ export const columns: ColumnDef<Rent>[] = [
     },
   },
   {
-    accessorKey: "category.name",
+    accessorKey: "category.title",
     header: "Category",
   },
   {
-    accessorKey: "name",
+    accessorKey: "title",
     header: "Name",
   },
   {
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Rent>[] = [
     },
   },
   {
-    accessorKey: "discount",
+    accessorKey: "discountPrice",
     header: "Discount",
   },
   {
@@ -64,7 +64,7 @@ export const columns: ColumnDef<Rent>[] = [
     header: "Fuel",
   },
   {
-    accessorKey: "gearbox",
+    accessorKey: "gear",
     header: "Gearbox",
   },
   {

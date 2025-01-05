@@ -1,10 +1,31 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { useAppSelector } from "@/hooks/redux";
+import { selectAuth } from "@/store/auth";
+import { Spinner } from "./Spinner";
 import { UserRole } from "@/types";
 import { paths } from "@/constants/paths";
 
 const DashboardLayout = () => {
+  const {user, loading} = useAppSelector(selectAuth)
+
+  if (loading) {
+      return (
+        <div className="flex flex-col gap-3 w-full items-center mt-28">
+          <Spinner/>
+          Loading...
+        </div>
+      );
+    }
+  
+    if (!user || user.role !== UserRole.Admin) {
+      return (
+          <Navigate to={paths.HOME} />
+      );
+    }
+
+
   return (
     <SidebarProvider>
       <DashboardSidebar />

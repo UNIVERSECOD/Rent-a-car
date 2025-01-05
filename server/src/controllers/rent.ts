@@ -15,8 +15,8 @@ const getAll = async (req: Request, res: Response) => {
       minPrice,
       categories,
       capacities,
-      skip=0,
-      take=10,
+      skip = 0,
+      take = 10,
     } = req.matchedData;
     // const { search } = req.query;
     const filter: RootFilterQuery<any> = {
@@ -87,13 +87,12 @@ const getAll = async (req: Request, res: Response) => {
       });
     }
 
-    const rents = await Rent.find(filter).populate([
-      "category",
-      "dropOffLocations",
-      "pickUpLocations",
-    ]).skip(skip).limit(take);
+    const rents = await Rent.find(filter)
+      .populate(["category", "dropOffLocations", "pickUpLocations"])
+      .skip(skip)
+      .limit(take);
 
-    const count = await Rent.countDocuments(filter)
+    const count = await Rent.countDocuments(filter);
 
     res.status(200).json({
       message: "Rents retrieved successfully!",
@@ -105,6 +104,30 @@ const getAll = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+const getById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const rent = await Rent.findById(id).populate([
+      "category",
+      "dropOffLocations",
+      "pickUpLocations",
+    ]);
+    if (!rent) {
+      res.status(404).json({ message: "Rent not found" });
+      return;
+    }
+    res.status(200).json({
+      message: "Rent retrieved successfully!",
+      item: {
+        ...rent.toObject(),
+        imageUrls: rent.imageUrls.map((url) => `${process.env.BASE_URL}${url}`),
+      },
+    });
+  } catch (err) {
     res.status(500).json({ message: "Internal server error!" });
   }
 };
@@ -176,12 +199,117 @@ const create = async (req: Request, res: Response) => {
       imageUrls: (req.files as Express.Multer.File[]).map((file) => file.path),
     });
 
-    if(typeof categoryExists !== "number"){
+    if (typeof categoryExists !== "number") {
       categoryExists.rents.push(rent._id);
       await categoryExists.save();
     }
 
     res.status(201).json({ message: "Rent created successfully!" });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+const edit = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      title,
+      description,
+      fuel,
+      gear,
+      capacity,
+      price,
+      discountPrice,
+      category,
+      dropOffLocations,
+      pickUpLocations,
+    } = req.matchedData;
+
+    const rent = await Rent.findById(id).populate([
+      "category",
+      "dropOffLocations",
+      "pickUpLocations",
+    ]);
+
+    if (!rent) {
+      deleteFiles(req.files as Express.Multer.File[]);
+      res.status(404).json({ message: "Rent not found" });
+      return;
+    }
+
+    const promises = [
+      Category.findById(category),
+      Location.countDocuments({
+        _id: {
+          $in: pickUpLocations,
+        },
+      }),
+      Location.countDocuments({
+        _id: {
+          $in: dropOffLocations,
+        },
+      }),
+    ];
+
+    const [
+      categoryExists,
+      pickUpLocationsExistCount,
+      dropOffLocationsExistCount,
+    ] = await Promise.all(promises);
+
+    if (!categoryExists) {
+      deleteFiles(req.files as Express.Multer.File[]);
+      res.status(400).json({ message: "Category not found" });
+      return;
+    }
+
+    if (pickUpLocations.length !== pickUpLocationsExistCount) {
+      deleteFiles(req.files as Express.Multer.File[]);
+      res.status(400).json({ message: "Pick-up locations not found" });
+      return;
+    }
+
+    if (dropOffLocations.length !== dropOffLocationsExistCount) {
+      deleteFiles(req.files as Express.Multer.File[]);
+      res.status(400).json({ message: "Drop-off locations not found" });
+      return;
+    }
+
+    rent.title = title;
+    rent.description = description;
+    rent.fuel = fuel;
+    rent.gear = gear;
+    rent.capacity = capacity;
+    rent.price = price;
+    rent.discountPrice = discountPrice;
+    rent.category = category;
+    rent.dropOffLocations = dropOffLocations;
+    rent.pickUpLocations = pickUpLocations;
+
+    if (req.files?.length) {
+      deleteFilesByPaths(rent.imageUrls);
+      rent.imageUrls = (req.files as Express.Multer.File[]).map(
+        (file) => file.path
+      );
+    }
+
+    if (
+      rent.category.toString() !== category &&
+      typeof categoryExists !== "number"
+    ) {
+      categoryExists.rents.push(rent._id);
+      await categoryExists.save();
+      await Category.findByIdAndUpdate(rent.category, {
+        $pull: { rents: rent._id },
+      });
+      rent.category = category;
+    }
+
+    await rent.save();
+
+    res.status(200).json({ message: "Rent successfully updated", item: rent });
   } catch (err) {
     res.status(500).json({ message: "Internal server error!" });
   }
@@ -204,8 +332,10 @@ const remove = async (req: Request, res: Response) => {
 
 const rentController = {
   create,
+  edit,
   remove,
   getAll,
+  getById,
 };
 
 export default rentController;

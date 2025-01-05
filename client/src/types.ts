@@ -33,7 +33,7 @@ export type Rent = {
   capacity: number;
   createdAt: string;
   currency: string;
-  discount: number;
+  discountPrice: number;
   category: Category;
   dropOffLocations: Location[];
   imageUrls: string[];

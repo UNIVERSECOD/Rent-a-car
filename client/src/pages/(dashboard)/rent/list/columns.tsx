@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export const columns: ColumnDef<Rent>[] = [
   {
-    accessorKey: "images",
+    accessorKey: "imageUrls",
     header: "Image",
     cell: (data) => {
       return (
@@ -54,6 +54,13 @@ export const columns: ColumnDef<Rent>[] = [
   {
     accessorKey: "discountPrice",
     header: "Discount",
+    cell: (data) => {
+      return (
+        <div className="min-W-[160px]">
+          {data.row.original.discountPrice || "No Discount"}
+        </div>
+      );
+    }
   },
   {
     accessorKey: "capacity",

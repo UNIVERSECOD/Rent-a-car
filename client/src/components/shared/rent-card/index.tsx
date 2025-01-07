@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Rent } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { useDialog } from "@/hooks/useDialog";
+import { RenderIf } from "../RenderIf";
 
 type Props = {
   rent: Rent;
@@ -20,7 +21,7 @@ type Props = {
 export const RentCard = ({ rent }: Props) => {
   const { openDialog } = useDialog();
   const [isLiked, setIsLiked] = useState(false);
-  const { _id, title, category, fuel, gear, imageUrls, capacity, price } = rent;
+  const { _id, title, category, fuel, gear, imageUrls, capacity, price, discountPrice } = rent;
   const mainImage = imageUrls[0];
 
   return (
@@ -69,10 +70,20 @@ export const RentCard = ({ rent }: Props) => {
         </div>
       </div>
       <div className="flex items-center justify-between mt-3 lg:mt-6">
-        <p className="text-secondary-500 text-xl font-bold">
-          {formatPrice(price)}/{" "}
-          <span className="text-sm text-secondary-300">day</span>
+        <div className="flex flex-col gap-x-1">
+          <RenderIf
+          condition={!!discountPrice}
+          >
+        <p className="text-muted-foreground text-sm font-bold line-through">
+          {formatPrice(price)}
+          
         </p>
+          </RenderIf>
+        <p className="text-secondary-500 text-xl font-bold">
+          {formatPrice(discountPrice || price)}
+        </p>
+        </div>/
+          <span className="text-sm text-secondary-300">day</span>
         <Button asChild>
           <Link to={paths.PAYMENT(_id)} onClick={() => {}}>
             Rent Now

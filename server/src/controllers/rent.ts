@@ -17,12 +17,19 @@ const getAll = async (req: Request, res: Response) => {
       capacities,
       skip = 0,
       take = 10,
+      showInRecommendation,
     } = req.matchedData;
     // const { search } = req.query;
     const filter: RootFilterQuery<any> = {
       $or: [],
       $and: [],
     };
+
+    if (showInRecommendation) {
+      filter.$and?.push({
+        showInRecommendation: showInRecommendation === "true",
+      });
+    }
 
     if (search) {
       filter.$or?.push({
@@ -143,6 +150,7 @@ const create = async (req: Request, res: Response) => {
       price,
       discountPrice,
       category,
+      showInRecommendation,
       dropOffLocations,
       pickUpLocations,
     } = req.matchedData;
@@ -196,6 +204,7 @@ const create = async (req: Request, res: Response) => {
       category,
       dropOffLocations,
       pickUpLocations,
+      showInRecommendation: showInRecommendation === "true",
       imageUrls: (req.files as Express.Multer.File[]).map((file) => file.path),
     });
 
@@ -223,6 +232,7 @@ const edit = async (req: Request, res: Response) => {
       price,
       discountPrice,
       category,
+      showInRecommendation,
       dropOffLocations,
       pickUpLocations,
     } = req.matchedData;
@@ -287,6 +297,7 @@ const edit = async (req: Request, res: Response) => {
     rent.category = category;
     rent.dropOffLocations = dropOffLocations;
     rent.pickUpLocations = pickUpLocations;
+    rent.showInRecommendation = showInRecommendation === "true";
 
     if (req.files?.length) {
       deleteFilesByPaths(rent.imageUrls);

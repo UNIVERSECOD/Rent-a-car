@@ -20,8 +20,8 @@ type Props = {
 export const RentCard = ({ rent }: Props) => {
   const { openDialog } = useDialog();
   const [isLiked, setIsLiked] = useState(false);
-  const { _id, name, category, fuel, gearBox, images, capacity, price } = rent;
-  const mainImage = images[0];
+  const { _id, title, category, fuel, gear, imageUrls, capacity, price } = rent;
+  const mainImage = imageUrls[0];
 
   return (
     <div className="w-full bg-white rounded-[10px] p-4 lg:p-6">
@@ -31,10 +31,10 @@ export const RentCard = ({ rent }: Props) => {
             to={paths.DETAIL(_id)}
             className="font-bold text-secondary-500 text-base lg:text-xl leading-[150%] tracking-[-0.6px] cursor-pointer hover:underline"
           >
-            {name}
+            {title}
           </Link>
           <p className="text-secondary-300 text-xs lg:text-sm leading-[150%] tracking-[-0.28px]">
-            {category.name}
+            {category.title}
           </p>
         </div>
         <button onClick={() => setIsLiked(!isLiked)} className="h-fit">
@@ -58,7 +58,7 @@ export const RentCard = ({ rent }: Props) => {
         <div className="flex gap-1.5 items-center">
           <img src={TransmissionImg} alt="Transmission" />
           <p className=" text-secondary-300 text-sm font-medium leading-[24px] tracking-[-0.28px]">
-            {gearBox}
+            {gear}
           </p>
         </div>
         <div className="flex gap-1.5 items-center">

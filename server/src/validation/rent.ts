@@ -2,7 +2,7 @@ import { Schema } from "express-validator";
 
 export const getAllRentsSchema: Schema = {
   skip: {
-   in: ["query"],
+  in: ["query"],
     optional: true,
     isNumeric: true,
     default:{
@@ -64,6 +64,11 @@ export const getAllRentsSchema: Schema = {
     optional: true,
     isNumeric: true,
   },
+  showInRecommendation:{
+    in: ["query"],
+    optional: true,
+    isBoolean: true,
+  }
 }
 
 export const createRentSchema: Schema = {
@@ -198,4 +203,9 @@ export const editRentSchema: Schema = {
     },
     notEmpty: true,
   },
+  showInRecommendation: {
+    in: ["body"],
+    isBoolean: true,
+    optional: true,
+  }
 };

@@ -1,6 +1,6 @@
 import { Rent } from "@/types";
 
-export type CreateRentPayload = {
+export type RentPayload = {
   title: string;
   description: string;
   price: number;
@@ -12,7 +12,7 @@ export type CreateRentPayload = {
   dropOffLocations: string[];
   capacity: number;
   showInRecommendation: boolean;
-  images: File[] |null ;
+  images: File[] | null;
 };
 
 export type CreateRentResponse = {
@@ -23,4 +23,22 @@ export type CreateRentResponse = {
 export type getAllRentsResponse = {
   message: string;
   items: Rent[];
+};
+
+export type getRentByIdResponse = {
+  message: string;
+  item: Rent;
+};
+
+export type GetAllRentPayload = {
+  skip?: number;
+  take?: number;
+  search?: string;
+  dropOffLocation?: string;
+  pickUpLocation?: string;
+  categories?: string[] ;
+  capacities?:string[] ;
+  maxPrice?: number;
+  minPrice?: number;
+  showInRecommendation?: boolean;
 };

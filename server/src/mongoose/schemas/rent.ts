@@ -53,6 +53,10 @@ const rentSchema = new mongoose.Schema({
     ref: "Location",
     default: [],
   },
+  showInRecommendation:{
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

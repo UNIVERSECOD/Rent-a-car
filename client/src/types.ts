@@ -25,9 +25,9 @@ export type Category = {
 
 export type Rent = {
   _id: string;
-  name: string;
+  title: string;
   fuel: number;
-  gearBox: string;
+  gear: string;
   price: number;
   description: string;
   capacity: number;
@@ -37,7 +37,7 @@ export type Rent = {
   category: Category;
   dropOffLocations: Location[];
   imageUrls: string[];
-  pickUpLocation: Location;
+  pickUpLocations: Location[];
   showInRecommendation: boolean;
   reviews: Review[];
 };

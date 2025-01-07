@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
@@ -35,7 +35,7 @@ import { paths } from "@/constants/paths";
 import { error } from "console";
 import { AxiosError } from "axios";
 import { AxiosResponseError } from "@/types";
-
+import { RenderIf } from "@/components/shared/RenderIf";
 
 const getFormSchema = (isEdit: boolean) =>
   z.object({
@@ -47,10 +47,12 @@ const getFormSchema = (isEdit: boolean) =>
         required_error: "Price is required",
       })
       .positive(),
-    discountPrice: z.number({
-      invalid_type_error: "Discount must be a number",
-      required_error: "Discount is required",
-    }).nullable(),
+    discountPrice: z
+      .number({
+        invalid_type_error: "Discount must be a number",
+        required_error: "Discount is required",
+      })
+      .nullable(),
 
     category: z.string().min(2, { message: "Category is required" }),
     fuel: z
@@ -80,8 +82,7 @@ const getFormSchema = (isEdit: boolean) =>
               return Array.from(files).every((file) => allowedTypes[file.type]);
             },
             {
-              message:
-                "Invalid file type. Allowed types: JPG, PNG",
+              message: "Invalid file type. Allowed types: JPG, PNG",
             }
           )
           .refine(
@@ -100,49 +101,74 @@ type Props = {
   type: "create" | "update";
 };
 
+
+
 const ActionForm = ({ type }: Props) => {
   const isEdit = type === "update";
   const navigate = useNavigate();
   const { id } = useParams();
-  const {mutate: mutateCreate} = useMutation({
+  const { data } = useQuery({
+    queryKey: [QUERY_KEYS.ADMIN_RENT_BY_ID, id],
+    queryFn: () => rentService.getById(id!),
+    enabled: isEdit,
+  });
+
+  const editItem = data?.data.item || null;
+
+   
+
+  const { mutate: mutateCreate } = useMutation({
     mutationFn: rentService.create,
     onSuccess: () => {
-      toast.success("Rent created successfully")
-      navigate(paths.DASHBOARD.RENTS.LIST)
+      toast.success("Rent created successfully");
+      navigate(paths.DASHBOARD.RENTS.LIST);
     },
     onError: (error: AxiosResponseError) => {
       toast.error(error.response?.data.message ?? "Something went wrong");
-    }
+    },
   });
-  const {data: locationData} = useQuery({
+
+  const { mutate: mutateUpdate } = useMutation({
+    mutationFn: rentService.edit,
+    onSuccess: () => {
+      toast.success("Rent updated successfully");
+      navigate(paths.DASHBOARD.RENTS.LIST);
+    },
+    onError: (error: AxiosResponseError) => {
+      toast.error(error.response?.data.message?? "Something went wrong");
+    },
+  })
+
+
+
+  const { data: locationData } = useQuery({
     queryKey: [QUERY_KEYS.LOCATIONS],
     queryFn: locationService.getAll,
   });
-  const {data: categoryData} = useQuery({
+  const { data: categoryData } = useQuery({
     queryKey: [QUERY_KEYS.CATEGORIES],
     queryFn: categoryService.getAll,
-  })
+  });
 
   const locationOptions = useMemo(() => {
-    if(!locationData?.data.items) return [];
+    if (!locationData?.data.items) return [];
 
     return locationData.data.items.map((item) => ({
       value: item._id,
-      label: item.title
-    }))
-  }, [locationData])
+      label: item.title,
+    }));
+  }, [locationData]);
 
-  
   const categoryOptions = useMemo(() => {
-    if(!categoryData?.data.items) return [];
+    if (!categoryData?.data.items) return [];
 
     return categoryData.data.items.map((item) => ({
       value: item._id,
-      label: item.title
-    }))
-  }, [categoryData])
+      label: item.title,
+    }));
+  }, [categoryData]);
 
-  const formSchema = useMemo(()=> getFormSchema(isEdit), [isEdit])
+  const formSchema = useMemo(() => getFormSchema(isEdit), [isEdit]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -160,27 +186,56 @@ const ActionForm = ({ type }: Props) => {
       images: [],
     },
     resolver: zodResolver(formSchema),
-  })
+  });
 
-  function onSubmit (values: z.infer<typeof formSchema>){
-if(type === "create"){
-  const data = {
-    title: values.title,
-    description: values.description,
-    price: values.price,
-    discountPrice: values.discountPrice,
-    category: values.category,
-    fuel: values.fuel,
-    gear: values.gear,
-    pickUpLocations: values.pickUpLocations,
-    dropOffLocations: values.dropOffLocations,
-    capacity: values.capacity,
-    showInRecommendation: values.showInRecommendation,
-    images: values.images,
+  useEffect(() => {
+    if (editItem) {
+      form.setValue("title", editItem.title);
+      form.setValue("description", editItem.description);
+      form.setValue("price", editItem.price);
+      form.setValue("discountPrice", editItem.discountPrice);
+      form.setValue("category", editItem.category._id);
+      form.setValue("fuel", +editItem.fuel);
+      form.setValue("gear", editItem.gear);
+      form.setValue(
+        "pickUpLocations",
+        editItem.pickUpLocations.map((location) => location._id)
+      );
+      form.setValue(
+        "dropOffLocations",
+        editItem.dropOffLocations.map((location) => location._id)
+      );
+      form.setValue("capacity", editItem.capacity);
+      form.setValue("showInRecommendation", editItem.showInRecommendation);
+      form.setValue("images", editItem.imageUrls);
+    }
+  }, [editItem]);
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+      const data = {
+        title: values.title,
+        description: values.description,
+        price: values.price,
+        discountPrice: values.discountPrice,
+        category: values.category,
+        fuel: +values.fuel,
+        gear: values.gear,
+        pickUpLocations: values.pickUpLocations,
+        dropOffLocations: values.dropOffLocations,
+        capacity: values.capacity,
+        showInRecommendation: values.showInRecommendation,
+        images: values.images,
+      };
+      if (type === "create") {
+        mutateCreate(data);
+      }else{
+        mutateUpdate({
+          id: id!,
+          data
+      });
+      }
   }
-mutateCreate(data);
-  }
-  }
+
   return (
     <div className="pt-6">
       <h1 className="text-2xl font-bold text-primary mb-4">Create Rent</h1>
@@ -332,7 +387,7 @@ mutateCreate(data);
                 </FormItem>
               )}
             />
-              <FormField
+            <FormField
               control={form.control}
               name="pickUpLocations"
               render={({ field }) => (
@@ -422,24 +477,29 @@ mutateCreate(data);
                 </FormItem>
               )}
             />
-          </div>
-{/* 
+          </div>    
+             
           <RenderIf
+          
             condition={
-              !!editItem?.images.length && !form.watch("images")?.length
+              !!editItem?.imageUrls.length || !form.watch("images")?.length
             }
+            
           >
+            debugger
             <h4>Existing Images</h4>
             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-              {editItem?.images.map((image: string) => (
+              {editItem?.imageUrls.map((imageUrls: string, index: number) =>              
+              (
                 <img
-                  src={image}
+                  key={index}
+                  src={imageUrls}
                   alt="Rent Image"
                   className="w-full object-cover rounded-lg"
                 />
-              ))}
+            ))}
             </div>
-          </RenderIf> */}
+          </RenderIf>
           <div className="flex justify-end mt-4">
             <Button asChild variant="secondary">
               <Link to="/dashboard/rents" className="mr-2">

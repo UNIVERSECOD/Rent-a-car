@@ -13,9 +13,6 @@ export const getAllRentsSchema: Schema = {
     in: ["query"],
     optional: true,
     isNumeric: true,
-    default:{
-      options: 0,
-    },
   },
   search: {
     in: ["query"],

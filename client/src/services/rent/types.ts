@@ -22,6 +22,9 @@ export type CreateRentResponse = {
 
 export type getAllRentsResponse = {
   message: string;
+  count: number;
+  skip: number;
+  take: number;
   items: Rent[];
 };
 
@@ -34,8 +37,8 @@ export type GetAllRentPayload = {
   skip?: number;
   take?: number;
   search?: string;
-  dropOffLocation?: string;
-  pickUpLocation?: string;
+  dropOffLocation?: string | null;
+  pickUpLocation?: string | null;
   categories?: string[] ;
   capacities?:string[] ;
   maxPrice?: number;

@@ -16,7 +16,7 @@ const getAll = async (req: Request, res: Response) => {
       categories,
       capacities,
       skip = 0,
-      take = 10,
+      take = 15,
       showInRecommendation,
     } = req.matchedData;
     // const { search } = req.query;
@@ -104,6 +104,8 @@ const getAll = async (req: Request, res: Response) => {
     res.status(200).json({
       message: "Rents retrieved successfully!",
       count,
+      skip,
+      take,
       items: rents.map((rent) => ({
         ...rent.toObject(),
         imageUrls: rent.imageUrls.map((url) => `${process.env.BASE_URL}${url}`),

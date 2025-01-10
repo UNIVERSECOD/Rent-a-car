@@ -31,7 +31,7 @@ export const ImagesSection = ({ images }: Props) => {
               <img
                 src={image}
                 alt="Rent Picture"
-                className="w-full object-cover h-full "
+                className="w-full object-cover h-full !max-h-[500px] "
               />
             </div>
           </SwiperSlide>

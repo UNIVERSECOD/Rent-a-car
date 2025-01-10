@@ -41,7 +41,7 @@ export type GetAllRentPayload = {
   pickUpLocation?: string | null;
   categories?: string[] ;
   capacities?:string[] ;
-  maxPrice?: number;
-  minPrice?: number;
+  maxPrice?: number | null;
+  minPrice?: number | null;
   showInRecommendation?: boolean;
 };

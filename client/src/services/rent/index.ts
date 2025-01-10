@@ -9,26 +9,30 @@ import {
 
 async function getAll(data: GetAllRentPayload) {
   const params = new URLSearchParams();
-  if(data.skip) params.append('skip', data.skip.toString());
-  if(data.take) params.append('take', data.take.toString());
-  if(data.search) params.append('search', data.search);
-  if(data.dropOffLocation)
-    params.append('dropOffLocation', data.dropOffLocation);
-  if(data.pickUpLocation)
-    params.append('pickUpLocation', data.pickUpLocation);
-  if(data.categories)
-    data.categories.forEach((category) =>{
-  params.append('categories', category);
-  });
-  if(data.capacities)
-    data.capacities.forEach((capacity) => {
-      params.append('capacities', capacity.toString());
+  if (data.skip) params.append("skip", data.skip.toString());
+  if (data.take) params.append("take", data.take.toString());
+  if (data.search) params.append("search", data.search);
+  if (data.dropOffLocation)
+    params.append("dropOffLocation", data.dropOffLocation);
+  if (data.pickUpLocation) params.append("pickUpLocation", data.pickUpLocation);
+  if (data.categories)
+    data.categories.forEach((category, index) => {
+      params.append(`categories[${index}]`, category.toString());
     });
-  if(data.maxPrice) params.append('maxPrice', data.maxPrice.toString());
-  if(data.minPrice) params.append('minPrice', data.minPrice.toString());
+  if (data.capacities)
+    data.capacities.forEach((capacity, index) => {
+      params.append(`capacities[${index}]`, capacity.toString());
+    });
+  if (data.maxPrice) params.append("maxPrice", data.maxPrice.toString());
+  if (data.minPrice) params.append("minPrice", data.minPrice.toString());
   if (data.showInRecommendation)
-    params.append('showInRecommendation', data.showInRecommendation.toString());
-  return await axiosInstance.get<getAllRentsResponse>(`/rents?${params.toString()}`);
+    params.append("showInRecommendation", data.showInRecommendation.toString());
+  const response = await axiosInstance.get<getAllRentsResponse>(
+    `/rents?${params.toString()}`
+  );
+  console.log("Backend Response:", response.data);
+  return response;
+
 }
 
 async function getById(id: string) {
@@ -83,7 +87,7 @@ async function edit({ id, data }: { id: string; data: RentPayload }) {
   });
 
   if (data.images) {
-   Array.from(data.images).forEach((image) => {
+    Array.from(data.images).forEach((image) => {
       formData.append("images", image);
     });
   }

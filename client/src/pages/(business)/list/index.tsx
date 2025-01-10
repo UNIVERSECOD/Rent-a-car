@@ -19,9 +19,12 @@ export const RentListPage = () => {
   const pickUpLocation = searchParams.get("pickup_location");
   const pickUpDate = searchParams.get("pickup_date")
   const dropOffDate = searchParams.get("dropoff_date")
+  const categories = searchParams.getAll("category");
+  const capacities = searchParams.getAll("capacity");
+  const maxPrice = searchParams.get("maxPrice");
+  const minPrice = searchParams.get("minPrice");
 
-
-
+ 
   const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: [QUERY_KEYS.RENT_LIST, searchParams.toString()],
     queryFn: ({ pageParam }) =>
@@ -30,23 +33,26 @@ export const RentListPage = () => {
         take: 5,
         pickUpLocation,
         dropOffLocation,
+        categories,
+        capacities,
+        maxPrice: maxPrice? parseInt(maxPrice) : undefined,
+        minPrice: minPrice? parseInt(minPrice) : undefined,
       }),
     initialPageParam: 0,
+    
     getNextPageParam: (lastPage) => {
 
-      console.log("lastpage", lastPage);
       
       const hasmore =
         lastPage.data.count > (lastPage.data.skip + 1) * lastPage.data.take;
       if (hasmore) {
         return +lastPage.data.skip + +lastPage.data.take;
       }
-      console.log("hasmore", hasmore);
       
     },
-  });
 
-  console.log("hasnext", hasNextPage);
+
+  });
   
 
   const rents =

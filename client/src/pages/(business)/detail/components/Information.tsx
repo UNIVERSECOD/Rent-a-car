@@ -9,46 +9,49 @@ import { Link } from "react-router-dom";
 import { paths } from "@/constants/paths";
 import { formatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
-import { selectUserData } from "@/store/features/userSlice";
 import { toast } from "sonner";
 import { DialogTypeEnum, useDialog } from "@/hooks/useDialog";
 //@ts-ignore
 import ReactStars from "react-rating-stars-component";
+import { selectAuth } from "@/store/auth";
+import { RenderIf } from "@/components/shared/RenderIf";
 
 type Props = {
   rent: Rent;
 };
 
 export const InformationSection = ({ rent }: Props) => {
-  const { user } = useSelector(selectUserData);
+  const { user } = useSelector(selectAuth);
   const { openDialog } = useDialog();
   const [isLiked, setIsLiked] = useState(false);
   const {
     _id,
-    name,
+    title,
     description,
     fuel,
-    gearBox,
+    gear,
     capacity,
     category,
     price,
-    discount,
+    discountPrice,
     reviews,
   } = rent;
 
-  const rating = Math.round(
-    reviews.reduce((acc, review) => review.rating + acc, 0) / reviews.length
-  );
+  // const rating = Math.round(
+  //   reviews.reduce((acc, review) => review.rating + acc, 0) / reviews.length
+  // );
+
+  const rating = 2
 
   return (
     <div className="bg-white rounded-[10px] p-4 lg:p-6 relative">
       <h1 className="text-secondary-500 text-2xl lg:text-[32px] !leading-[150%] tracking-[-0.96px] font-bold">
-        {name}
+        {title}
       </h1>
       <div className="mt-2 flex items-center gap-x-2">
         <ReviewStar rating={rating} />
         <p className="text-secondary text-sm font-medium tracking-[-0.28px]">
-          {reviews.length} Reviewer
+          {/* {reviews.length} Reviewer */}
         </p>
       </div>
       <button
@@ -66,7 +69,7 @@ export const InformationSection = ({ rent }: Props) => {
             Type Car
           </p>
           <p className="text-secondary text-lg lg:text-xl font-semibold leading-[150%] tracking-[-0.4px]">
-            {category.name}
+            {category.title}
           </p>
         </div>
         <div className="w-[200px] flex justify-between">
@@ -82,7 +85,7 @@ export const InformationSection = ({ rent }: Props) => {
             Steering
           </p>
           <p className="text-secondary text-lg lg:text-xl font-semibold leading-[150%] tracking-[-0.4px]">
-            {gearBox}
+            {gear}
           </p>
         </div>
         <div className="w-[200px] flex justify-between">
@@ -96,13 +99,24 @@ export const InformationSection = ({ rent }: Props) => {
       </div>
       <div className="flex items-center justify-between mt-12 lg:mt-16">
         <div>
+          <RenderIf
+          condition={!!discountPrice} 
+          >
           <p className="text-secondary-500 text-[28px] font-bold">
-            {formatPrice(price - discount)}/{" "}
+            {formatPrice(discountPrice)}/{" "}
             <span className="text-base text-secondary-300">days</span>
           </p>
           <p className="line-through text-secondary-300 text-base font-bold -mt-2">
             {formatPrice(price)}
           </p>
+            </RenderIf>
+            <RenderIf condition={
+              !discountPrice
+            }>
+          <p className="text-secondary-500 text-[28px] font-bold">
+            {formatPrice(price)}
+          </p>
+              </RenderIf> 
         </div>
         <Button asChild>
           <Link

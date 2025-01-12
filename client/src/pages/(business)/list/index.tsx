@@ -23,6 +23,7 @@ export const RentListPage = () => {
   const capacities = searchParams.getAll("capacity");
   const maxPrice = searchParams.get("maxPrice");
   const minPrice = searchParams.get("minPrice");
+  const search = searchParams.get("search");
 
  
   const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
@@ -37,6 +38,7 @@ export const RentListPage = () => {
         capacities,
         maxPrice: maxPrice? parseInt(maxPrice) : undefined,
         minPrice: minPrice? parseInt(minPrice) : undefined,
+        search,
       }),
     initialPageParam: 0,
     

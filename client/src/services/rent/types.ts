@@ -36,7 +36,7 @@ export type getRentByIdResponse = {
 export type GetAllRentPayload = {
   skip?: number;
   take?: number;
-  search?: string;
+  search?: string | null;
   dropOffLocation?: string | null;
   pickUpLocation?: string | null;
   categories?: string[] ;

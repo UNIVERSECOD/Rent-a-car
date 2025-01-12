@@ -17,6 +17,14 @@ const RentDetailPage = () => {
     queryKey: [QUERY_KEYS.RENT_DETAIL, id],
     queryFn: () => rentService.getById(id!),
   });
+  const {data: rentsData, isLoading: isRentsLoading}= useQuery({
+    queryKey: [QUERY_KEYS.RECOMMENDATION_RENTS],
+    queryFn: () => rentService.getAll({
+      take: 3,
+    }),
+  });
+
+  const rents = rentsData?.data.items || [];
 
   
 
@@ -51,12 +59,12 @@ const RentDetailPage = () => {
         <InformationSection rent={rent} />
       </div>
       {/* <ReviewsSection reviews={rent.reviews} /> */}
-      <RentList maxCols={3} heading="Recent Cars" />
+      <RentList maxCols={3} rents={rents}  isLoading={isRentsLoading} heading="Recent Cars" />
       <RentList
         maxCols={3}
         heading="Recomendation Cars"
-        isLoading={false}
-        rents={[]}
+        isLoading={isRentsLoading}
+        rents={rents}
       />
       <ScrollToTop />
     </div>

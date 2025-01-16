@@ -60,8 +60,7 @@ const ActionForm = ({ type }: Props) => {
 
   const editItem = data?.data.item || null;
 
-  console.log("Edit item: ", editItem);
-  
+  console.log("Edit item: ", editItem); 
 
    
 
@@ -121,7 +120,7 @@ const ActionForm = ({ type }: Props) => {
       }else{
         mutateUpdate({
           id: id!,
-          data
+          title:data.title,
       });
       }
   }

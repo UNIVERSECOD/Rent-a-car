@@ -20,10 +20,12 @@ async function create({ title }: { title: string }) {
 }
 
 async function edit({ id, title }: { id: string; title: string }) {
-  return await axiosInstance.put<CreateLocationResponse>(`/locations/${id}`, {
-    title,
-  });
+console.log("edit", id, title);
+
+  return await axiosInstance.put<CreateLocationResponse>(`/locations/${id}`, {title});
 }
+
+
 
 async function remove(id: string) {
   return await axiosInstance.delete(`/locations/${id}`);

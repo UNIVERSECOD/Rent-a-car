@@ -1,10 +1,11 @@
 import { paths } from "@/constants/paths";
-import { Rent } from "@/types";
+import locationService from "@/services/location";
+import { Location } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CheckIcon, Edit2Icon, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export const columns: ColumnDef<Rent>[] = [
+export const columns: ColumnDef<Location>[] = [
 
   {
     accessorKey: "title",
@@ -26,13 +27,25 @@ export const columns: ColumnDef<Rent>[] = [
   {
     accessorKey: "",
     header: "Actions",
-    cell: () => {
+    cell: ({ row }) => {
+      const handleDelete = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete this location?");
+        if (confirmed) {
+          try {
+            await locationService.remove(row.original._id); // API-ni çağırır
+            alert("Location deleted successfully!");
+          } catch (error) {
+            alert("Failed to delete location!");
+          }
+        }
+      };
+
       return (
         <div>
-          <XIcon className="w-4 h-4" />
-          {/* <Link to={paths.DASHBOARD.RENTS.EDIT(data.row.original._id)}>
-            <XIcon className="w-4 h-4" />
-          </Link> */}
+          <XIcon
+            className="w-4 h-4 cursor-pointer text-red-600"
+            onClick={handleDelete}
+          />
         </div>
       );
     },

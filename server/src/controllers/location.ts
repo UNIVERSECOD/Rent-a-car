@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Location from "../mongoose/schemas/location";
 import Rent from "../mongoose/schemas/rent";
+import { log } from "node:console";
+import { compare } from "bcrypt";
 
 
 const getAll = async (req: Request, res: Response) => {
@@ -32,7 +34,7 @@ const getById = async (req: Request, res: Response) => {
     });
 
   }catch(err){
-    console.log(err);
+   console.error(err)
     res.status(500).json({ message: "Internal server error!" });
   }
 }
@@ -41,6 +43,7 @@ const getById = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
   try {
     const { title } = req.matchedData;
+
     const location = await Location.create({ title });
 
     res.status(201).json({
@@ -90,20 +93,25 @@ const remove = async (req: Request, res: Response) => {
 };
 
 const edit = async (req: Request, res: Response) => {
+ 
   try{
+    
     const { id } = req.params;
-    const { title } = req.matchedData;
+    const { title } = req.body;  
+
+    console.log("title", title);
 
     const location = await Location.findById(id);
+    console.log(location);
     
     if(!location){
       res.status(404).json({ message: "Location not found" });
       return;
     }
+    
+    const locationTextEdit = await Location.updateOne({ title });
 
-    location.title = title;
-
-    res.status(200).json({ message: "Location updated successfully!", item: location });
+    res.status(200).json({ message: "Location updated successfully!", item: locationTextEdit });
 
   }catch (err) {
     res.status(500).json({ message: "Internal server error!" });

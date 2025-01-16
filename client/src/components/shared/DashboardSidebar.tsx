@@ -2,6 +2,8 @@ import {
   CalendarIcon,
   CarIcon,
   Home,
+  LocateIcon,
+  MenuIcon,
   MessageCircleIcon,
   MessageSquareMoreIcon,
 } from "lucide-react";
@@ -27,6 +29,16 @@ const items = [
     title: "Car Rents",
     url: paths.DASHBOARD.RENTS.LIST,
     icon: CarIcon,
+  },
+  {
+    title: "Locations",
+    url: paths.DASHBOARD.LOCATIONS.LIST,
+    icon: LocateIcon,
+  },
+  {
+    title: "Categories",
+    url: paths.DASHBOARD.CATEGORIES.LIST,
+    icon: MenuIcon,
   },
   {
     title: "Reservations",

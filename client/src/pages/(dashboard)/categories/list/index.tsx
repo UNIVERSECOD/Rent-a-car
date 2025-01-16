@@ -1,22 +1,20 @@
-import { Link, useParams } from "react-router-dom";
-import { Steps } from "./components/Steps";
-import { PaymentSummary } from "./components/Summary";
 import { useQuery } from "@tanstack/react-query";
+import { columns } from "./columns";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { Spinner } from "@/components/shared/Spinner";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { paths } from "@/constants/paths";
+import { DataTable } from "@/components/shared/DataTable";
 import rentService from "@/services/rent";
 
-const PaymentPage = () => {
-  const { id } = useParams<{ id: string }>();
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: [QUERY_KEYS.RENT_DETAIL, id],
-    queryFn: () => rentService.getById(id!),
+const DashboardRentsPage = () => {
+  const {data, isLoading, isError} = useQuery({
+    queryKey: [QUERY_KEYS.ADMIN_RENTS],
+    queryFn: rentService.getAll,
   });
 
-  if (isLoading) {
+    if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center mt-28">
         <Spinner />
@@ -24,9 +22,12 @@ const PaymentPage = () => {
       </div>
     );
   }
-  const rent = data?.data?.item;
 
-  if (isError || !rent) {
+  const rents = data?.data?.items;
+
+
+
+  if (isError || !rents) {
     return (
       <div className="flex flex-col justify-center items-center mt-28">
         <p className="text-2xl font-bold mb-3 text-primary">
@@ -40,11 +41,16 @@ const PaymentPage = () => {
   }
 
   return (
-    <div className="container py-6 lg:py-8 grid lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_492px] lg:gap-x-8 gap-y-8">
-      <Steps />
-      <PaymentSummary rent={rent} />
+    <div className="pt-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-primary font-bold text-2xl ">Categories</h2>
+        <Button asChild>
+          <Link to={paths.DASHBOARD.CATEGORIES.CREATE}>Create Category</Link>
+        </Button>
+      </div>
+      <DataTable columns={columns} data={rents} />
     </div>
   );
 };
 
-export default PaymentPage;
+export default DashboardRentsPage;

@@ -6,6 +6,16 @@ export const paths = {
   RESERVATIONS: "/reservations",
   DASHBOARD: {
     MAIN: "/dashboard",
+    CATEGORIES: {
+      LIST: "/dashboard/categories",
+      CREATE: "/dashboard/categories/create",
+      EDIT: (id = ":id") => `/dashboard/categories/edit/${id}`,
+    },
+    LOCATIONS: {
+      LIST: "/dashboard/location",
+      CREATE: "/dashboard/locations/create",
+      EDIT: (id = ":id") => `/dashboard/location/edit/${id}`,
+    },
     RENTS: {
       LIST: "/dashboard/rents",
       CREATE: "/dashboard/rents/create",

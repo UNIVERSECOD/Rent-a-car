@@ -11,14 +11,17 @@ import FuelImg from "@/assets/icons/fuel.svg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Rent } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import { useDialog } from "@/hooks/useDialog";
+import { DialogTypeEnum, useDialog } from "@/hooks/useDialog";
 import { RenderIf } from "../RenderIf";
+import { useAppSelector } from "@/hooks/redux";
+import { selectAuth } from "@/store/auth";
 
 type Props = {
   rent: Rent;
 };
 
 export const RentCard = ({ rent }: Props) => {
+  const { user} = useAppSelector(selectAuth)
   const { openDialog } = useDialog();
   const [isLiked, setIsLiked] = useState(false);
   const { _id, title, category, fuel, gear, imageUrls, capacity, price, discountPrice } = rent;
@@ -85,7 +88,14 @@ export const RentCard = ({ rent }: Props) => {
         </div>/
           <span className="text-sm text-secondary-300">day</span>
         <Button asChild>
-          <Link to={paths.PAYMENT(_id)} onClick={() => {}}>
+          <Link to={paths.PAYMENT(_id)} 
+          onClick={(e) => {
+          if (!user) {
+            e.preventDefault();
+            openDialog(DialogTypeEnum.LOGIN)
+          }
+          }}
+          >
             Rent Now
           </Link>
         </Button>

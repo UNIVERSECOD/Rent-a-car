@@ -10,13 +10,19 @@ import DashboardMainPage from "@/pages/(dashboard)/main";
 import DashboardLayout from "@/components/shared/DashboardLayout";
 
 import DashboardRentListPage from "@/pages/(dashboard)/rent/list";
-import DashboardRentCreatePage from "@/pages/(dashboard)/rent/create";
+import DashboardRentCreatePage from "@/pages/(dashboard)/rent/create"
+import DashboardLocationEditPage from "@/pages/(dashboard)/location/edit"
+import DashboardCategoryEditPage from "@/pages/(dashboard)/categories/edit"
+
+import DashboardCategoryCreatePage from "@/pages/(dashboard)/categories/create"
+import DashboardLocationCreatePage from "@/pages/(dashboard)/location/create";
 import DashboardRentEditPage from "@/pages/(dashboard)/rent/edit";
 import AuthLayout from "@/components/shared/AuthLayout";
 import ReservationsPage from "@/pages/(business)/reservations";
 import DashboardReservationListPage from "@/pages/(dashboard)/reservation/list";
 import DashboardReviewListPage from "@/pages/(dashboard)/review/list";
 import ChatPage from "@/pages/(dashboard)/chat";
+import DashboardLocationPage from "@/pages/(dashboard)/location/list";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +67,30 @@ export const router = createBrowserRouter([
           {
             path: paths.DASHBOARD.RENTS.LIST,
             element: <DashboardRentListPage />,
+          },
+          {
+            path: paths.DASHBOARD.LOCATIONS.LIST,
+            element: <DashboardLocationPage />,
+          },
+          {
+            path: paths.DASHBOARD.LOCATIONS.CREATE,
+            element: <DashboardLocationCreatePage />,
+          },
+          {
+            path: paths.DASHBOARD.LOCATIONS.EDIT(),
+            element: <DashboardLocationEditPage />,
+          },
+          {
+            path: paths.DASHBOARD.CATEGORIES.LIST,
+            element: <DashboardRentListPage />,
+          },
+          {
+            path: paths.DASHBOARD.CATEGORIES.CREATE,
+            element: <DashboardCategoryCreatePage />,
+          },
+          {
+            path: paths.DASHBOARD.CATEGORIES.EDIT(),
+            element: <DashboardCategoryEditPage />,
           },
           {
             path: paths.DASHBOARD.RENTS.CREATE,

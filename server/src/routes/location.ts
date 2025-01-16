@@ -8,6 +8,8 @@ const router = Router();
 
 router.get("/", locationController.getAll);
 
+router.get("/:id", locationController.getById);
+
 router.post(
   "/",
   authorize({ isAdmin: true }),
@@ -19,5 +21,13 @@ router.delete(
     authorize({ isAdmin: true }),
     locationController.remove
   );
+
+  router.put(
+    "/:id",
+    authorize({ isAdmin: true }),
+    locationController.edit
+  );
+
+  
 
 export default router;

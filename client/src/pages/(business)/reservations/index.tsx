@@ -16,62 +16,70 @@ import { toast } from "sonner";
 
 //@ts-ignore
 import ReactStars from "react-rating-stars-component";
+import rentService from "@/services/rent";
+import reservationService from "@/services/reservation";
 
 const ReservationsPage = () => {
-  // const items = data?.data.items || [];
+  const {data} = useQuery({
+    queryKey: [QUERY_KEYS.RESERVATIONS],
+    queryFn: () => reservationService.getAll(),
+  })
+
+  
+  const items = data?.data.items || [];
 
   return (
     <div className="container pt-4 lg:pt-8 pb-8 lg:pb-16 flex flex-col gap-y-4">
       <h2 className="text-2xl font-semibold text-muted-foreground">
         Your Reservations
       </h2>
-      {/* {items.length ? (
+      {!!items.length ? (
         items.map((reservation: Reservation) => (
-          <ReservationCard key={reservation.id} reservation={reservation} />
+          <ReservationCard key={reservation._id} reservation={reservation} />
         ))
       ) : (
         <div className="text-center text-lg text-muted-foreground">
           No reservations found
         </div>
-      )} */}
+      )}
     </div>
   );
 };
 
 const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
   const rent = reservation.rent as Rent;
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  function handleCancelReservation() {}
+  // function handleCancelReservation() {}
 
-  const showReview =
-    !reservation.hasReview &&
-    reservation.status === ReservationStatus.Approved &&
-    new Date(reservation.endDate) < new Date();
+  // const showReview =
+  //   !reservation.hasReview &&
+  //   reservation.status === ReservationStatus.Approved &&
+  //   new Date(reservation.endDate) < new Date();
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 relative">
       <div className="flex items-end justify-between">
         <div className="flex items-center">
-          <img
-            src={rent.images[0]}
+           <img
+            src={rent.imageUrls[0]}
             alt=""
             className="w-24 h-24 object-cover rounded-lg"
-          />
+          /> 
           <div className="ml-4">
             <div className="flex items-center gap-x-4">
-              <h2 className="text-lg font-semibold">{rent.name}</h2>
+              <h2 className="text-lg font-semibold">{rent.title}</h2>
               <p className="text-xs text-gray-400 translate-y-0.5">
-                {formatDate(reservation.startDate)} -{" "}
-                {formatDate(reservation.endDate)}
+                {formatDate(reservation.pickUpDate)} -{" "}
+                {formatDate(reservation.dropOffDate)}
               </p>
             </div>
             <p className="text-muted-foreground">
               {rent.price}
               <span className="text-sm">{rent.currency}</span> x{" "}
               {calculateDateDifference(
-                reservation.startDate,
-                reservation.endDate
+                reservation.pickUpDate,
+                reservation.dropOffDate
               )}{" "}
               days
             </p>
@@ -81,18 +89,18 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
           </div>
         </div>
         <div className="absolute right-3 top-3">
-          <TooltipProvider>
+          {/* <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <ReservationCardStatus status={reservation.status} />
-              </TooltipTrigger>
-              <TooltipContent className="capitalize bg-muted-foreground">
+                 <ReservationCardStatus status={reservation.status} />
+              </TooltipTrigger> 
+               <TooltipContent className="capitalize bg-muted-foreground">
                 {reservation.status}
-              </TooltipContent>
+              </TooltipContent> 
             </Tooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
         </div>
-        <RenderIf condition={reservation.status === ReservationStatus.Pending}>
+        {/* <RenderIf condition={reservation.status === ReservationStatus.Pending}>
           <div>
             <Button
               onClick={handleCancelReservation}
@@ -106,11 +114,11 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
               Cancel Reservation
             </Button>
           </div>
-        </RenderIf>
+        </RenderIf> */}
       </div>
-      <RenderIf condition={showReview}>
+      {/* <RenderIf condition={showReview}>
         <WriteReview rentId={rent._id} reservationId={reservation._id} />
-      </RenderIf>
+      </RenderIf> */}
     </div>
   );
 };

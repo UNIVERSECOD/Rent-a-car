@@ -21,6 +21,7 @@ const validateSchema = (schema: Schema) => {
       return;
     }
     req.matchedData = matchedData(req);
+
     next();
   };
 };

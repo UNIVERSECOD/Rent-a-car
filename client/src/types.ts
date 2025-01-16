@@ -47,21 +47,18 @@ export type Reservation = {
     name: string;
     phoneNumber: string;
     address: string;
-    townCity: string;
+    city: string;
   };
   createdAt: string;
   dropOffLocation: string;
-  endDate: string;
-  id: string;
+  dropOffDate: string;
   pickUpLocation: string;
+  pickUpDate: string;
   rent: Rent | string;
-  startDate: string;
-  status: ReservationStatus;
   total: number;
   updatedAt: string;
   user: string;
   _id: string;
-  hasReview: boolean;
 };
 
 export type Review = {
@@ -122,3 +119,5 @@ export type AxiosResponseError = AxiosError<{
   message: string;
   
 }>
+
+

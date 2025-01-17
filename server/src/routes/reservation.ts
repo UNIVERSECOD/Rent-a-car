@@ -8,6 +8,8 @@ const router = Router();
 
 router.get("/", authorize({}), reservationController.getAll);
 router.post("/", authorize({}), validateSchema(createReservationSchema), reservationController.create);
+router.get("/popular_cars", authorize({}), reservationController.getPopularCars);
+
 
 
 

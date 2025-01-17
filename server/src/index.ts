@@ -16,6 +16,8 @@ import locationRoutes from "./routes/location";
 import categoryRoutes from "./routes/category";
 import rentRoutes from "./routes/rent";
 import reservationRoutes from "./routes/reservation";
+import favoritesRoutes from "./routes/favorites";
+
 
 
 const app = express();
@@ -51,6 +53,7 @@ app.use("/locations", locationRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/rents", rentRoutes)
 app.use("/reservation", reservationRoutes)
+app.use("/favorites", favoritesRoutes)
 
 
 

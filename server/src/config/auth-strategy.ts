@@ -25,6 +25,7 @@ passport.deserializeUser(async function (id, done) {
         resetPasswordTokenExpires: undefined,
         password: undefined,
         resetPasswordToken: undefined,
+        favorites: user.favorites.map(fav => fav.toString()),
         createdAt: user.createdAt?.toString(),
         updatedAt: user.updatedAt?.toString(),
      }
@@ -58,6 +59,7 @@ passport.use(
           resetPasswordTokenExpires: undefined,
           password: undefined,
           resetPasswordToken: undefined,
+          favorites: user.favorites.map(fav => fav.toString()),
           createdAt: user.createdAt?.toString(),
           updatedAt: user.updatedAt?.toString(),
         });

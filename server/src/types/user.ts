@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export 
 interface IUser  {
 _id: string; 
@@ -8,6 +10,7 @@ _id: string;
   password?: string;  
   resetPasswordToken?: string; 
   resetPasswordTokenExpires?: string; 
+  favorites: string[];
   createdAt: string; 
   updatedAt: string; 
   role: UserRole;

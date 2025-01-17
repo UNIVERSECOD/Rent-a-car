@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { paths } from "@/constants/paths";
 import { DataTable } from "@/components/shared/DataTable";
-import rentService from "@/services/rent";
+import categoryService from "@/services/category";
 
-const DashboardRentsPage = () => {
+const DashboardCategoryPage = () => {
   const {data, isLoading, isError} = useQuery({
-    queryKey: [QUERY_KEYS.ADMIN_RENTS],
-    queryFn: rentService.getAll,
+    queryKey: [QUERY_KEYS.ADMIN_CATEGORIES],
+    queryFn: categoryService.getAll,
   });
 
     if (isLoading) {
@@ -23,11 +23,11 @@ const DashboardRentsPage = () => {
     );
   }
 
-  const rents = data?.data?.items;
+  const categories = data?.data?.items;
 
 
 
-  if (isError || !rents) {
+  if (isError || !categories) {
     return (
       <div className="flex flex-col justify-center items-center mt-28">
         <p className="text-2xl font-bold mb-3 text-primary">
@@ -43,14 +43,14 @@ const DashboardRentsPage = () => {
   return (
     <div className="pt-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-primary font-bold text-2xl ">Categories</h2>
+        <h2 className="text-primary font-bold text-2xl ">Locations</h2>
         <Button asChild>
-          <Link to={paths.DASHBOARD.CATEGORIES.CREATE}>Create Category</Link>
+          <Link to={paths.DASHBOARD.CATEGORIES.CREATE}>Create Location</Link>
         </Button>
       </div>
-      <DataTable columns={columns} data={rents} />
+      <DataTable columns={columns} data={categories} />
     </div>
   );
 };
 
-export default DashboardRentsPage;
+export default DashboardLocationPage;

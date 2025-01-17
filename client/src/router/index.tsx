@@ -10,6 +10,8 @@ import DashboardMainPage from "@/pages/(dashboard)/main";
 import DashboardLayout from "@/components/shared/DashboardLayout";
 
 import DashboardRentListPage from "@/pages/(dashboard)/rent/list";
+import DashboardCategoryListPage from "@/pages/(dashboard)/rent/list";
+
 import DashboardRentCreatePage from "@/pages/(dashboard)/rent/create"
 import DashboardLocationEditPage from "@/pages/(dashboard)/location/edit"
 import DashboardCategoryEditPage from "@/pages/(dashboard)/categories/edit"
@@ -82,7 +84,7 @@ export const router = createBrowserRouter([
           },
           {
             path: paths.DASHBOARD.CATEGORIES.LIST,
-            element: <DashboardRentListPage />,
+            element: <DashboardCategoryPage />,
           },
           {
             path: paths.DASHBOARD.CATEGORIES.CREATE,

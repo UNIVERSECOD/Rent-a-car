@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import Location from "../mongoose/schemas/location";
 import Rent from "../mongoose/schemas/rent";
-import { log } from "node:console";
-import { compare } from "bcrypt";
+
 
 
 const getAll = async (req: Request, res: Response) => {

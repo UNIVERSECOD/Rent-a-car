@@ -17,6 +17,7 @@ import categoryRoutes from "./routes/category";
 import rentRoutes from "./routes/rent";
 import reservationRoutes from "./routes/reservation";
 import favoritesRoutes from "./routes/favorites";
+import reviewRoutes from "./routes/review";
 
 
 
@@ -54,6 +55,7 @@ app.use("/categories", categoryRoutes)
 app.use("/rents", rentRoutes)
 app.use("/reservation", reservationRoutes)
 app.use("/favorites", favoritesRoutes)
+app.use("/reviews", reviewRoutes);
 
 
 

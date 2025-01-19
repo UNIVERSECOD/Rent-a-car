@@ -57,6 +57,11 @@ const rentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  reviews: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Review",
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,

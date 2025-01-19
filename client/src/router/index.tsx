@@ -10,7 +10,8 @@ import DashboardMainPage from "@/pages/(dashboard)/main";
 import DashboardLayout from "@/components/shared/DashboardLayout";
 
 import DashboardRentListPage from "@/pages/(dashboard)/rent/list";
-import DashboardCategoryListPage from "@/pages/(dashboard)/rent/list";
+import DashboardLocationPage from "@/pages/(dashboard)/location/list";
+import DashboardCategoryPage from "@/pages/(dashboard)/categories/list";
 
 import DashboardRentCreatePage from "@/pages/(dashboard)/rent/create"
 import DashboardLocationEditPage from "@/pages/(dashboard)/location/edit"
@@ -24,7 +25,6 @@ import ReservationsPage from "@/pages/(business)/reservations";
 import DashboardReservationListPage from "@/pages/(dashboard)/reservation/list";
 import DashboardReviewListPage from "@/pages/(dashboard)/review/list";
 import ChatPage from "@/pages/(dashboard)/chat";
-import DashboardLocationPage from "@/pages/(dashboard)/location/list";
 
 export const router = createBrowserRouter([
   {

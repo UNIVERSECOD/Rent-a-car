@@ -53,4 +53,4 @@ const DashboardCategoryPage = () => {
   );
 };
 
-export default DashboardLocationPage;
+export default DashboardCategoryPage;

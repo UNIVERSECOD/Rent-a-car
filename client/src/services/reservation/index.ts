@@ -1,6 +1,6 @@
 import axiosInstance from "../axiosInstance";
 import { getAllRentsResponse } from "../rent/types";
-import { CreateReservationPayload, GetAllReservationsResponse } from "./types";
+import { ChangeReservationStatusPayload, CreateReservationPayload, GetAllReservationsResponse } from "./types";
 
 async function getAll() {
  
@@ -16,9 +16,20 @@ async function create(data: CreateReservationPayload) {
   return await axiosInstance.post("/reservation", data);
 }
 
+async function changeStatus({
+  id,
+  data,
+}: {
+  id: string;
+  data: ChangeReservationStatusPayload;
+}) {
+  return await axiosInstance.put(`/reservation/change-status/${id}`, data);
+}
+
 
 const reservationService = {
   create,
   getAll,
+  changeStatus,
 };
 export default reservationService;

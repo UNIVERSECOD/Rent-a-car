@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { paths } from "@/constants/paths";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import rentService from "@/services/rent";
+import reviewService from "@/services/review";
 
 const RentDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,8 +24,13 @@ const RentDetailPage = () => {
       take: 3,
     }),
   });
+  const { data: reviewsData } = useQuery({
+    queryKey: [QUERY_KEYS.RENT_DETAIL_REVIEW],
+    queryFn: () => reviewService.getByRentId({ id: id! }),
+  });
 
   const rents = rentsData?.data.items || [];
+  const reviews = reviewsData?.data?.items || [];
 
   
 
@@ -58,7 +64,7 @@ const RentDetailPage = () => {
         <ImagesSection images={rent.imageUrls} />
         <InformationSection rent={rent} />
       </div>
-      {/* <ReviewsSection reviews={rent.reviews} /> */}
+      <ReviewsSection reviews={rent.reviews} />
       <RentList maxCols={3} rents={rents}  isLoading={isRentsLoading} heading="Recent Cars" />
       <RentList
         maxCols={3}

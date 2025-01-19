@@ -3,6 +3,7 @@ export const QUERY_KEYS = {
   ADMIN_LOCATION: "adminLocation",
   ADMIN_CATEGORIES: "adminCategories",
   ADMIN_RESERVATIONS: "adminReservations",
+  RENT_DETAIL_REVIEW: "rentDetailReview",
   ADMIN_REVIEWS: "adminReviews",
   ADMIN_RENT_DETAIL: "adminRentDetail",
   ADMIN_RENT_BY_ID: "admin-rent-by-id",

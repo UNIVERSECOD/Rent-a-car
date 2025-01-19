@@ -59,14 +59,17 @@ export type Reservation = {
   updatedAt: string;
   user: string;
   _id: string;
+  status: ReservationStatus;
+  hasReview: boolean;
 };
+
 
 export type Review = {
   author: User;
   content: string;
   createdAt: string;
   id: string;
-  rating: number;
+  rate: number;
   rent: Rent;
   status: ReviewStatus;
   _id: string;

@@ -50,3 +50,16 @@ export const createReservationSchema: Schema = {
     isMongoId: true,
   }
 };
+
+export const changeReservationStatusSchema: Schema = {
+  status: {
+    in: ["body"],
+    matches: {
+      options: [/\b(?:Pending|Rejected|Approved|Cancelled)\b/],
+      errorMessage: "Invalid Status",
+    },
+    isString: true,
+    notEmpty: true,
+  },
+};
+

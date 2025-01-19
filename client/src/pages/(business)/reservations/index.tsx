@@ -9,23 +9,27 @@ import {
 } from "@/components/ui/tooltip";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { calculateDateDifference, formatDate } from "@/lib/utils";
-import { Rent, Reservation, ReservationStatus } from "@/types";
+import {
+  AxiosResponseError,
+  Rent,
+  Reservation,
+  ReservationStatus,
+} from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 //@ts-ignore
 import ReactStars from "react-rating-stars-component";
-import rentService from "@/services/rent";
 import reservationService from "@/services/reservation";
+import reviewService from "@/services/review";
 
 const ReservationsPage = () => {
-  const {data} = useQuery({
+  const { data } = useQuery({
     queryKey: [QUERY_KEYS.RESERVATIONS],
-    queryFn: () => reservationService.getAll(),
-  })
+    queryFn: reservationService.getAll,
+  });
 
-  
   const items = data?.data.items || [];
 
   return (
@@ -48,24 +52,38 @@ const ReservationsPage = () => {
 
 const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
   const rent = reservation.rent as Rent;
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: reservationService.changeStatus,
+    onSuccess: () => {
+      toast.success("Reservation cancelled successfully");
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.RESERVATIONS],
+      });
+    },
+  });
+  const showReview =
+    new Date(reservation.dropOffDate) < new Date() && !reservation.hasReview;
 
-  // function handleCancelReservation() {}
-
-  // const showReview =
-  //   !reservation.hasReview &&
-  //   reservation.status === ReservationStatus.Approved &&
-  //   new Date(reservation.endDate) < new Date();
+  function handleCancelReservation() {
+    mutate({
+      id: reservation._id,
+      
+      data: {
+        status: ReservationStatus.Cancelled,
+      },
+    });
+  }
 
   return (
     <div className="bg-white shadow-md rounded-lg p-4 relative">
       <div className="flex items-end justify-between">
         <div className="flex items-center">
-           <img
+          <img
             src={rent.imageUrls[0]}
             alt=""
             className="w-24 h-24 object-cover rounded-lg"
-          /> 
+          />
           <div className="ml-4">
             <div className="flex items-center gap-x-4">
               <h2 className="text-lg font-semibold">{rent.title}</h2>
@@ -75,8 +93,8 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
               </p>
             </div>
             <p className="text-muted-foreground">
-              {rent.price}
-              <span className="text-sm">{rent.currency}</span> x{" "}
+              {rent.discountPrice || rent.price}
+              <span className="text-sm">$</span> x{" "}
               {calculateDateDifference(
                 reservation.pickUpDate,
                 reservation.dropOffDate
@@ -89,36 +107,36 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
           </div>
         </div>
         <div className="absolute right-3 top-3">
-          {/* <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider>
+            <Tooltip delayDuration={100}>
               <TooltipTrigger>
-                 <ReservationCardStatus status={reservation.status} />
-              </TooltipTrigger> 
-               <TooltipContent className="capitalize bg-muted-foreground">
+                <ReservationCardStatus status={reservation.status} />
+              </TooltipTrigger>
+              <TooltipContent className="capitalize bg-muted-foreground">
                 {reservation.status}
-              </TooltipContent> 
+              </TooltipContent>
             </Tooltip>
-          </TooltipProvider> */}
+          </TooltipProvider>
         </div>
-        {/* <RenderIf condition={reservation.status === ReservationStatus.Pending}>
+        <RenderIf condition={reservation.status === ReservationStatus.Pending}>
           <div>
             <Button
               onClick={handleCancelReservation}
-              disabled={false}
+              disabled={isPending}
               size="sm"
               variant={"destructive"}
             >
-              <RenderIf condition={false}>
+              <RenderIf condition={isPending}>
                 <Spinner />
               </RenderIf>
               Cancel Reservation
             </Button>
           </div>
-        </RenderIf> */}
+        </RenderIf>
       </div>
-      {/* <RenderIf condition={showReview}>
+      <RenderIf condition={showReview}>
         <WriteReview rentId={rent._id} reservationId={reservation._id} />
-      </RenderIf> */}
+      </RenderIf>
     </div>
   );
 };
@@ -140,15 +158,39 @@ const ReservationCardStatus = ({ status }: { status: ReservationStatus }) => {
   }
 };
 
-const WriteReview = ({}: { rentId: string; reservationId: string }) => {
+const WriteReview = ({
+  reservationId,
+}: {
+  rentId: string;
+  reservationId: string;
+}) => {
   const [rating, setRating] = useState(1);
   const contentRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: reviewService.create,
+    onSuccess: () => {
+      toast.success("Review submitted successfully");
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.RESERVATIONS],
+      });
+    },
+    onError: (error: AxiosResponseError) => {
+      toast.error(error.response?.data.message || "Something went wrong");
+    },
+  });
 
   function onSubmitReview() {
     if (!contentRef.current || !contentRef.current.value) {
       return;
     }
+    const content = contentRef.current.value;
+    const rate = rating;
+    mutate({
+      reservationId: reservationId,
+      content,
+      rate,
+    });
   }
 
   return (
@@ -171,12 +213,12 @@ const WriteReview = ({}: { rentId: string; reservationId: string }) => {
         />
       </div>
       <Button
-        disabled={false}
+        disabled={isPending}
         onClick={onSubmitReview}
         size="sm"
         className="mt-2"
       >
-        <RenderIf condition={false}>
+        <RenderIf condition={isPending}>
           <Spinner />
         </RenderIf>
         Submit Review

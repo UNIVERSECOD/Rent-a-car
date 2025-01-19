@@ -1,4 +1,4 @@
-import { Reservation } from "@/types"
+import { Reservation, ReservationStatus } from "@/types"
 
 export type CreateReservationPayload = {
     rent: string,
@@ -18,3 +18,8 @@ export type GetAllReservationsResponse = {
   items: Reservation[],
   message: string,
 }
+
+export type ChangeReservationStatusPayload = {
+  status: ReservationStatus;
+};
+

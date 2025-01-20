@@ -3,7 +3,8 @@ import { AxiosError } from "axios";
 export type User = {
   _id: string;
   name: string;
-  surname: string;
+  avatar: string;
+  username: string;
   email: string;
   isBlocked: boolean;
   createdAt: string;

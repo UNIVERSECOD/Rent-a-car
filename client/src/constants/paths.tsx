@@ -4,6 +4,7 @@ export const paths = {
   DETAIL: (id = ":id") => `/detail/${id}`,
   PAYMENT: (id = ":id") => `/payment/${id}`,
   RESERVATIONS: "/reservations",
+  PROFILE: "/profile",
   DASHBOARD: {
     MAIN: "/dashboard",
     CATEGORIES: {

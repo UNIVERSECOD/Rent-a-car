@@ -101,8 +101,6 @@ type Props = {
   type: "create" | "update";
 };
 
-
-
 const ActionForm = ({ type }: Props) => {
   const isEdit = type === "update";
   const navigate = useNavigate();

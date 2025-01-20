@@ -10,7 +10,7 @@ import User from "../mongoose/schemas/user";
 const update = async (req: Request, res: Response) => {
   try {
     const userId = req.user?._id;
-    const { name } = req.matchedData;
+    const {name, username} =req.matchedData;
 
     const user = await User.findById(userId).select(
       "-password -resetPasswordToken -resetPasswordExpires"
@@ -24,6 +24,11 @@ const update = async (req: Request, res: Response) => {
     if (name) {
       user.name = name;
     }
+
+    if (username) {
+      user.username = username;
+    }
+
     if (req.file) {
       user.avatar = req.file.path;
     }

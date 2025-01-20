@@ -25,6 +25,7 @@ import ReservationsPage from "@/pages/(business)/reservations";
 import DashboardReservationListPage from "@/pages/(dashboard)/reservation/list";
 import DashboardReviewListPage from "@/pages/(dashboard)/review/list";
 import ChatPage from "@/pages/(dashboard)/chat";
+import ProfileEditPage from "@/pages/(business)/profile";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
       {
         path: paths.DETAIL(),
         element: <RentDetailPage />,
+      },
+      {
+        path: paths.PROFILE,
+        element: <ProfileEditPage />,
       },
       {
         path: "",

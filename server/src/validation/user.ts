@@ -1,12 +1,22 @@
-export const updateUserSchema = {
-    name: {
-      in: ["body"],
-      isString: true,
-      isLength: {
-        errorMessage: "Name should be at least 2 chars long",
-        options: { min: 2 },
-      },
-      optional: true,
+import { Schema } from "express-validator";
+
+export const updateUserSchema: Schema = {
+  name: {
+    in: ["body" as const], 
+    isString: {
+      errorMessage: "Name must be a string",
     },
-  };
-  
+    notEmpty: {
+      errorMessage: "Name cannot be empty",
+    },
+  },
+  username: {
+    in: ["body" as const], 
+    isString: {
+      errorMessage: "Username must be a string",
+    },
+    notEmpty: {
+      errorMessage: "Username cannot be empty",
+    },
+  },
+};

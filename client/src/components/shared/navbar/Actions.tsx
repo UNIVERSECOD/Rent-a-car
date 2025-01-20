@@ -59,7 +59,7 @@ export const NavbarActions = () => {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5">
+              <button title="user" className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5">
                 <User2Icon color="#596780" />
               </button>
             </DropdownMenuTrigger>

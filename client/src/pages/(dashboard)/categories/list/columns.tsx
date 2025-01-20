@@ -1,4 +1,5 @@
 import { paths } from "@/constants/paths";
+import categoryService from "@/services/category";
 import locationService from "@/services/location";
 import { Location } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -17,7 +18,7 @@ export const columns: ColumnDef<Location>[] = [
     cell: (data) => {
       return (
         <div>
-          <Link to={paths.DASHBOARD.LOCATIONS.EDIT(data.row.original._id)}>
+          <Link to={paths.DASHBOARD.CATEGORIES.EDIT(data.row.original._id)}>
             <Edit2Icon className="w-4 h-4" />
           </Link>
         </div>
@@ -29,11 +30,11 @@ export const columns: ColumnDef<Location>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const handleDelete = async () => {
-        const confirmed = window.confirm("Are you sure you want to delete this location?");
+        const confirmed = window.confirm("Are you sure you want to delete this category?");
         if (confirmed) {
           try {
-            await locationService.remove(row.original._id); // API-ni çağırır
-            alert("Location deleted successfully!");
+            await categoryService.remove(row.original._id); 
+            alert("Category deleted successfully!");
           } catch (error) {
             alert("Failed to delete location!");
           }

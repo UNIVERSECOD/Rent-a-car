@@ -53,8 +53,8 @@ const ActionForm = ({ type }: Props) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data } = useQuery({
-    queryKey: [QUERY_KEYS.ADMIN_LOCATION_BY_ID, id],
-    queryFn: () => locationService.getById(id!),
+    queryKey: [QUERY_KEYS.ADMIN_CATEGORY_BY_ID, id],
+    queryFn: () => categoryService.getById(id!),
     enabled: isEdit,
   });
 
@@ -65,10 +65,10 @@ const ActionForm = ({ type }: Props) => {
    
 
   const { mutate: mutateCreate } = useMutation({
-    mutationFn: locationService.create,
+    mutationFn: categoryService.create,
     onSuccess: () => {
-      toast.success("Location created successfully");
-      navigate(paths.DASHBOARD.LOCATIONS.LIST);
+      toast.success("Category created successfully");
+      navigate(paths.DASHBOARD.CATEGORIES.LIST);
     },
     onError: (error: AxiosResponseError) => {
       toast.error(error.response?.data.message ?? "Something went wrong");
@@ -76,19 +76,19 @@ const ActionForm = ({ type }: Props) => {
   });
 
   const { mutate: mutateUpdate } = useMutation({
-    mutationFn: locationService.edit,
+    mutationFn: categoryService.edit,
     onSuccess: () => {
-      toast.success("Location updated successfully");
-      navigate(paths.DASHBOARD.LOCATIONS.LIST);
+      toast.success("Category updated successfully");
+      navigate(paths.DASHBOARD.CATEGORIES.LIST);
     },
     onError: (error: AxiosResponseError) => {
       toast.error(error.response?.data.message?? "Something went wrong");
     },
   })
 
-  const { data: locationData } = useQuery({
-    queryKey: [QUERY_KEYS.LOCATIONS],
-    queryFn: locationService.getAll,
+  const { data: categoryData } = useQuery({
+    queryKey: [QUERY_KEYS.CATEGORIES],
+    queryFn: categoryService.getAll,
   });
 
 
@@ -127,7 +127,7 @@ const ActionForm = ({ type }: Props) => {
 
   return (
     <div className="pt-6">
-      <h1 className="text-2xl font-bold text-primary mb-4">Create Location</h1>
+      <h1 className="text-2xl font-bold text-primary mb-4">Create Category</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -139,7 +139,7 @@ const ActionForm = ({ type }: Props) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Baku" {...field} />
+                    <Input placeholder="Sport" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

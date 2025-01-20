@@ -118,52 +118,7 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-const getPopularCars = async (req: Request, res: Response) => {
-  try {
-    const popularCars = await Rent.aggregate([
-      {
-        $lookup: {
-          from: "reservations",
-          localField: "_id",
-          foreignField: "rent",
-          as: "reservations",
-        },
-      },
-      {
-        $addFields: {
-          reservationCount: { $size: "$reservations" },  
-        },
-      },
-      {
-        $match: { reservationCount: { $gt: 0 } },  
-      },
-      {
-        $sort: { reservationCount: -1 },  
-      },
-      {
-        $project: {
-          _id: 1,
-          title: 1,
-          price: 1,
-          discountPrice: 1,
-          imageUrls: 1,
-          reservationCount: 1,  
-        },
-      },
-    ]);
 
-    const totalPopularCount = popularCars.length;
-
-    res.status(200).json({
-      message: "Popular cars retrieved successfully!",
-      totalPopularCount: totalPopularCount,
-      items: popularCars,
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
 
 const changeStatus = async (req: Request, res: Response) => {
   try {
@@ -226,12 +181,93 @@ const changeStatus = async (req: Request, res: Response) => {
   }
 };
 
+// const getPopularCars = async (req: Request, res: Response) => {
+//   try {
+//     const popularCars = await Rent.aggregate([
+//       {
+//         $lookup: {
+//           from: "reservations",
+//           localField: "_id",
+//           foreignField: "rent",
+//           as: "reservations",
+//         },
+//       },
+//       {
+//         $addFields: {
+//           reservationCount: { $size: "$reservations" },  
+//         },
+//       },
+//       {
+//         $match: { reservationCount: { $gt: 1 } },  
+//       },
+//       {
+//         $sort: { reservationCount: -1 }, 
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           title: 1,
+//           price: 1,
+//           discountPrice: 1,
+//           imageUrls: 1,
+//           reservationCount: 1,
+//         },
+//       },
+//     ]);
+
+
+//     const totalPopularCount = popularCars.length;
+
+//     res.status(200).json({
+//       message: "Popular cars retrieved successfully!",
+//       totalPopularCount: totalPopularCount,
+//       items: popularCars,
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
+
+const getPopularCars = async () => {
+  try {
+    const popularCars = await Rent.aggregate([
+      {
+        $lookup: {
+          from: "reservations",
+          localField: "_id",
+          foreignField: "rent",
+          as: "reservations",
+        },
+      },
+      {
+        $addFields: {
+          reservationCount: { $size: "$reservations" },  
+        },
+      },
+      {
+        $match: { reservationCount: { $gt: 0 } },  
+      },
+    ]);
+
+    const totalPopularCount = popularCars.length;  
+    const totalReservationCount = popularCars.reduce((sum, car) => sum + car.reservationCount, 0);  
+
+    console.log("Total Popular Cars:", totalPopularCount);
+    console.log("Total Reservation Count:", totalReservationCount);
+    console.log("Popular Cars Data:", popularCars);
+  } catch (e) {
+    console.error("Error while fetching popular cars:", e);
+  }
+};
+
 
 const reservationController = {
   getAll,
   create,
+  changeStatus,
   getPopularCars,
-  changeStatus
 };
 
 export default reservationController;

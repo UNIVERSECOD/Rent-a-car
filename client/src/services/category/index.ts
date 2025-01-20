@@ -1,27 +1,38 @@
 import axiosInstance from "../axiosInstance";
-import { getAllCategoryResponse } from "./types";
+import { CreateCategoryResponse, getAllCategoryResponse, getCategoryByIdResponse } from "./types";
 
 
 async function getAll() {
   return await axiosInstance.get<getAllCategoryResponse>("/categories");
 }
 
-async function create({title}: {title: string}) {
+async function getById(id: string) {
+  return await axiosInstance.get<getCategoryByIdResponse>(`/categories/${id}`);
+}
 
-  // const formData = new FormData();
-  
-  // formData.append("title", data.title);
+async function create({ title }: { title: string }) {
+  return await axiosInstance.post<CreateCategoryResponse>("/categories", {
+    title,
+  });
+}
 
-  // const formy = formData.get("title")
+async function edit({ id, title }: { id: string; title: string }) {
+console.log("edit", id, title);
 
-  // console.log("get", formy);
-  
-  return await axiosInstance.post("/categories", {title});
+  return await axiosInstance.put<CreateCategoryResponse>(`/categories/${id}`, {title});
 }
 
 
+
+async function remove(id: string) {
+  return await axiosInstance.delete(`/categories/${id}`);
+}
+
 const categoryService = {
-getAll,
-create
+  getAll,
+  create,
+  getById,
+  remove,
+  edit
 };
 export default categoryService;

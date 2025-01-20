@@ -9,10 +9,12 @@ const router = Router();
 
 router.get("/", categoryController.getAll);
 
+router.get("/:id", categoryController.getById);
+
 router.post(
   "/",
   authorize({ isAdmin: true }),
-  validateSchema(createCategorySchema),
+  validateSchema(createLocationSchema),
   categoryController.create
 );
 router.delete(
@@ -20,5 +22,12 @@ router.delete(
     authorize({ isAdmin: true }),
     categoryController.remove
   );
+
+  router.put(
+    "/:id",
+    authorize({ isAdmin: true }),
+    categoryController.edit
+  );
+
 
 export default router;

@@ -6,22 +6,27 @@ import { QUERY_KEYS } from "@/constants/query-keys";
 import rentService from "@/services/rent";
 
 const HomePage = () => {
-  const {data, isLoading} = useQuery({
+  const {data: getAllRents, isLoading: getAllRentsLoading } = useQuery({
     queryKey: [QUERY_KEYS.RECOMMENDATION_RENTS],
     queryFn: () => rentService.getAll({
       showInRecommendation: true,
     })
   })
 
-  console.log(data)
-  const rents = data?.data?.items || [];
+  const {data: getAllPopularRents, isLoading: getAllPopularRentsLoading } = useQuery({
+    queryKey: [QUERY_KEYS.POPULAR_RENTS],
+    queryFn: () => rentService.getPopularCars({}),
+  })
+
+  const rents = getAllRents?.data?.items || [];
+  const popularRents = getAllPopularRents?.data?.items || [];
 
   return (
     <div className="container pt-4 lg:pt-8 pb-8 lg:pb-16 flex flex-col gap-y-6 lg:gap-y-8">
       <Hero />
       <AvailabilityFilter />
-      <RentList heading="Popular Cars" />
-      <RentList heading="Recommendation Cars" isLoading={isLoading} rents={rents} />
+      <RentList heading="Popular Cars" isLoading={getAllPopularRentsLoading}  rents={popularRents}/>
+      <RentList heading="Recommendation Cars" isLoading={getAllRentsLoading} rents={rents} />
     </div>
   );
 };

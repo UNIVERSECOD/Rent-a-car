@@ -6,3 +6,17 @@ items: Category[],
 };
 
 
+  export type CreateCategoryResponse = {
+    message: string;
+    item?: Category[];
+  };
+
+  export type getCategoryByIdResponse = {
+    message: string;
+    item: Category;
+  };
+  
+
+
+
+

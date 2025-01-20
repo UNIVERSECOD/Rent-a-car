@@ -43,9 +43,9 @@ const DashboardCategoryPage = () => {
   return (
     <div className="pt-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-primary font-bold text-2xl ">Locations</h2>
+        <h2 className="text-primary font-bold text-2xl ">Categories</h2>
         <Button asChild>
-          <Link to={paths.DASHBOARD.CATEGORIES.CREATE}>Create Location</Link>
+          <Link to={paths.DASHBOARD.CATEGORIES.CREATE}>Create Category</Link>
         </Button>
       </div>
       <DataTable columns={columns} data={categories} />

@@ -28,4 +28,5 @@ router.put(
 );
 router.delete("/:id", authorize(), rentController.remove);
 
+
 export default router;

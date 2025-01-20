@@ -95,10 +95,29 @@ async function edit({ id, data }: { id: string; data: RentPayload }) {
   return await axiosInstance.put<CreateRentResponse>(`/rents/${id}`, formData);
 }
 
+async function getPopularCars(data: GetAllRentPayload) {
+  const params = new URLSearchParams();
+  if (data.skip) params.append("skip", data.skip.toString());
+  if (data.take) params.append("take", data.take.toString());
+  
+  const response = await axiosInstance.get<getAllRentsResponse>(
+    `/rents/popular-cars?${params.toString()}`
+  );
+  return response;
+}
+
+
+
+async function deleteById(id: string) {
+  return await axiosInstance.delete(`/rents/${id}`);
+}
+
 const rentService = {
   create,
   edit,
   getById,
   getAll,
+  getPopularCars,
+  deleteById,
 };
 export default rentService;

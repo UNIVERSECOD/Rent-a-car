@@ -343,6 +343,8 @@ const remove = async (req: Request, res: Response) => {
   }
 };
 
+
+
 const rentController = {
   create,
   edit,

@@ -1,4 +1,5 @@
 import { paths } from "@/constants/paths";
+import rentService from "@/services/rent";
 import { Rent } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CheckIcon, Edit2Icon, XIcon } from "lucide-react";
@@ -98,6 +99,32 @@ export const columns: ColumnDef<Rent>[] = [
           <Link to={paths.DASHBOARD.RENTS.EDIT(data.row.original._id)}>
             <Edit2Icon className="w-4 h-4" />
           </Link>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "",
+    header: "Actions",
+    cell: ({ row }) => {
+      const handleDelete = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete this rent?");
+        if (confirmed) {
+          try {
+            await rentService.deleteById(row.original._id); 
+            alert("Rent deleted successfully!");
+          } catch (error) {
+            alert("Failed to delete location!");
+          }
+        }
+      };
+
+      return (
+        <div>
+          <XIcon
+            className="w-4 h-4 cursor-pointer text-red-600"
+            onClick={handleDelete}
+          />
         </div>
       );
     },

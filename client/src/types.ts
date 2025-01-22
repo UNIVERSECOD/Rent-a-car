@@ -33,7 +33,7 @@ export type Rent = {
   description: string;
   capacity: number;
   createdAt: string;
-  currency: string;
+  currency: string ;
   discountPrice: number | null;
   category: Category;
   dropOffLocations: Location[];
@@ -108,16 +108,16 @@ export enum UserRole {
 }
 
 export enum ReservationStatus {
-  Pending = "pending",
-  Approved = "approved",
-  Rejected = "rejected",
-  Cancelled = "cancelled",
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
+  Cancelled = "Cancelled",
 }
 
 export enum ReviewStatus {
-  Pending = "pending",
-  Approved = "approved",
-  Rejected = "rejected",
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
 }
 
 export type AxiosResponseError = AxiosError<{

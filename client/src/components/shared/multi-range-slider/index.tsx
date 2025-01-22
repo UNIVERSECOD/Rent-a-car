@@ -70,6 +70,7 @@ const MultiRangeSlider = ({
   return (
     <div id="multi-range-slider">
       <input
+      title="range"
         type="range"
         min={min}
         max={max}
@@ -83,6 +84,7 @@ const MultiRangeSlider = ({
         style={{ zIndex: (minVal > max - 100 ? "5" : null) as any }}
       />
       <input
+      title="range"
         type="range"
         min={min}
         max={max}

@@ -1,5 +1,5 @@
 import axiosInstance from "../axiosInstance";
-import { getAllRentsResponse } from "../rent/types";
+import { GetAllRentPayload, getAllRentsResponse, RentPayload } from "../rent/types";
 import { ChangeReservationStatusPayload, CreateReservationPayload, GetAllReservationsResponse } from "./types";
 
 async function getAll() {
@@ -26,10 +26,18 @@ async function changeStatus({
   return await axiosInstance.put(`/reservation/change-status/${id}`, data);
 }
 
+async function getPopularCars() {
+  
+const response = await axiosInstance.get<getAllRentsResponse>("/reservation/popular-cars")
+console.log(response.data);
+return response
+}
+
 
 const reservationService = {
   create,
   getAll,
   changeStatus,
+  getPopularCars
 };
 export default reservationService;

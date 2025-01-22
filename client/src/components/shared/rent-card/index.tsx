@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { paths } from "@/constants/paths";
 import TransmissionImg from "@/assets/icons/transmission.svg";
@@ -22,6 +22,7 @@ export const RentCard = ({ rent }: Props) => {
   const { openDialog } = useDialog();
   const { _id, title, category, fuel, gear, imageUrls, capacity, price, discountPrice, isFavorite } = rent;
   const mainImage = imageUrls[0];
+
 
   return (
     <div className="w-full bg-white rounded-[10px] p-4 lg:p-6">

@@ -11,7 +11,7 @@ import rentService from "@/services/rent";
 const DashboardRentsPage = () => {
   const {data, isLoading, isError} = useQuery({
     queryKey: [QUERY_KEYS.ADMIN_RENTS],
-    queryFn: rentService.getAll,
+    queryFn: () => rentService.getAll(),
   });
 
     if (isLoading) {

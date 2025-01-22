@@ -45,9 +45,9 @@ export const columns: ColumnDef<Rent>[] = [
       return (
         <div className="text-secondary-500">
           {data.row.original.price}{" "}
-          <span className="text-secondary-300">
+          {/* <span className="text-secondary-300">
             {data.row.original.currency}
-          </span>
+          </span> */}
         </div>
       );
     },

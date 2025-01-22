@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { columns } from "./columns";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import { Spinner } from "@/components/shared/Spinner";
-import { DataTable } from "@/components/shared/DataTable";
 import reservationService from "@/services/reservation";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { paths } from "@/constants/paths";
+import { DataTable } from "@/components/shared/DataTable";
+import { columns } from "./columns";
 
 const DashboardReservationListPage = () => {
   const { data, isLoading, isError } = useQuery({
@@ -15,19 +15,17 @@ const DashboardReservationListPage = () => {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col justify-center items-center mt-28">
-        <Spinner />
-        <p>Loading...</p>
-      </div>
-    );
+    <div className="flex flex-col gap-1 jkustify-center items-center mt-32">
+      <Spinner />
+      Loading...
+    </div>;
   }
 
   const reservations = data?.data.items || [];
 
-  if (isError || !reservations) {
+  if (isError) {
     return (
-      <div className="flex flex-col justify-center items-center mt-28">
+      <div className="flex flex-col gap-1 jkustify-center items-center mt-32">
         <p className="text-2xl font-bold mb-3 text-primary">
           Something went wrong!
         </p>

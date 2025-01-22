@@ -18,6 +18,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import MyImage from "../../../assets/images/car.png"
 
 //@ts-ignore
 import ReactStars from "react-rating-stars-component";
@@ -27,7 +28,7 @@ import reviewService from "@/services/review";
 const ReservationsPage = () => {
   const { data } = useQuery({
     queryKey: [QUERY_KEYS.RESERVATIONS],
-    queryFn: reservationService.getAll,
+    queryFn: () => reservationService.getAll(),
   });
 
   const items = data?.data.items || [];
@@ -68,7 +69,6 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
   function handleCancelReservation() {
     mutate({
       id: reservation._id,
-      
       data: {
         status: ReservationStatus.Cancelled,
       },
@@ -80,7 +80,7 @@ const ReservationCard = ({ reservation }: { reservation: Reservation }) => {
       <div className="flex items-end justify-between">
         <div className="flex items-center">
           <img
-            src={rent.imageUrls[0]}
+            src={rent.imageUrls[0] }
             alt=""
             className="w-24 h-24 object-cover rounded-lg"
           />

@@ -1,9 +1,4 @@
-import {
-  AxiosResponseError,
-  Rent,
-  Reservation,
-  ReservationStatus,
-} from "@/types";
+import { AxiosResponseError, Rent, Reservation, ReservationStatus } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CheckCircle2Icon, Edit2Icon, XCircleIcon } from "lucide-react";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
@@ -29,7 +24,7 @@ export const columns: ColumnDef<Reservation>[] = [
       switch (data.row.original.status) {
         case ReservationStatus.Approved:
           return (
-            <div className="text-green-600 capitalize">
+            <div className="text-green-500 capitalize">
               {data.row.original.status}
             </div>
           );
@@ -132,18 +127,15 @@ export const columns: ColumnDef<Reservation>[] = [
           });
         },
         onError: (error: AxiosResponseError) => {
-          toast.error(error.response?.data.message || "Something went wrong");
+          toast.error(error.response?.data.message || "Something went wrong!");
         },
       });
-      const status = data.row.original.status;
       const id = data.row.original._id;
+      const status = data.row.original.status;
       function handleStatusChange(
         status: ReservationStatus.Approved | ReservationStatus.Rejected
       ) {
-        mutate({
-          id,
-          data: { status },
-        });
+        mutate({ id, data: { status } });
       }
       return (
         <div>

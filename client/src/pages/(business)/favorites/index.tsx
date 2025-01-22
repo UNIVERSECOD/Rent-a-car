@@ -1,10 +1,21 @@
 import { RentList } from '@/components/shared/RentList'
+import { paths } from '@/constants/paths';
 import { QUERY_KEYS } from '@/constants/query-keys';
+import { useAppSelector } from '@/hooks/redux';
 import favoriteService from '@/services/favorites';
+import { selectAuth } from '@/store/auth';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react'
+import { Navigate } from 'react-router-dom';
 
 const FavoritesPage = () => {
+  const {user} = useAppSelector(selectAuth)
+ if (!user) {
+     return (
+         <Navigate to={paths.HOME} />
+     );
+   }
+
 
   const {data: getFavoriteRents, isLoading: getFavoriteRentsLoading } = useQuery({
     queryKey: [QUERY_KEYS.FAVORITES],

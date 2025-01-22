@@ -16,7 +16,7 @@ router.put(
   );
 
 router.get("/popular-cars", reservationController
-.getPopularCars);
+.getPopularRents);
 
 
 

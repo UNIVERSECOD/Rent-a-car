@@ -4,6 +4,7 @@ import { RentList } from "../../../components/shared/RentList";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/constants/query-keys";
 import rentService from "@/services/rent";
+import reservationService from "@/services/reservation";
 
 const HomePage = () => {
   const {data: getAllRents, isLoading: getAllRentsLoading } = useQuery({
@@ -15,18 +16,23 @@ const HomePage = () => {
 
   const {data: getAllPopularRents, isLoading: getAllPopularRentsLoading } = useQuery({
     queryKey: [QUERY_KEYS.POPULAR_RENTS],
-    queryFn: () => rentService.getPopularCars({}),
+    queryFn: () => reservationService.getPopularCars(),
   })
 
-  const rents = getAllRents?.data?.items || [];
-  const popularRents = getAllPopularRents?.data?.items || [];
+  console.log("Data from backend:", getAllPopularRents);
+
+
+  const recommendedRents = getAllRents?.data.items || [];
+  const popularRents = getAllPopularRents?.data.items || [];
+
+  
 
   return (
     <div className="container pt-4 lg:pt-8 pb-8 lg:pb-16 flex flex-col gap-y-6 lg:gap-y-8">
       <Hero />
       <AvailabilityFilter />
       <RentList heading="Popular Cars" isLoading={getAllPopularRentsLoading}  rents={popularRents}/>
-      <RentList heading="Recommendation Cars" isLoading={getAllRentsLoading} rents={rents} />
+      <RentList heading="Recommendation Cars" isLoading={getAllRentsLoading} rents={recommendedRents} />
     </div>
   );
 };

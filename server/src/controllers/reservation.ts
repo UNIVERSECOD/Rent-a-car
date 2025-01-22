@@ -19,34 +19,26 @@ const getAll = async (req: Request, res: Response) => {
       .populate("pickUpLocation")
       .populate("dropOffLocation");
 
-      // reservations.forEach((reservation) => {
-      //   (reservation.rent as any).imageUrls = (
-      //     reservation.rent as any
-      //   ).imageUrls.map((url: string) => {
-      //     if (url.startsWith("http")) return url;
-      //     return `${process.env.BASE_URL}${url}`;
-      //   });
-      // });
-
-      reservations.forEach((reservation) => {
-        if (reservation && reservation.rent) {  
-          const updatedImageUrls = (
-            reservation.rent as any
-          ).imageUrls.map((url: string) => {
-            if (url.startsWith("http")) return url;
-            return `${process.env.BASE_URL}${url}`;
-          });
-          (reservation.rent as any).imageUrls = updatedImageUrls;
-        }
-      });
+    reservations.forEach((reservation) => {
+      if (reservation.rent) {
+        (reservation.rent as any).imageUrls = (
+          reservation.rent as any
+        ).imageUrls.map((url: string) => {
+          if (url.startsWith("http")) return url;
+          return `${process.env.BASE_URL}${url}`;
+        });
+      } else {
+        (reservation.rent as any) = { imageUrls: [] }; 
+      }
+    });
 
     res.status(200).json({
-      message: "Reservations retrieved successfully!",
+      message: "Reservations fetched successfully",
       items: reservations,
     });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ message: "Internal Server Error" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -193,7 +185,7 @@ const changeStatus = async (req: Request, res: Response) => {
   }
 };
 
-// const getPopularCars = async (req: Request, res: Response) => {
+
 //   try {
 //     const popularCars = await Rent.aggregate([
 //       {
@@ -242,12 +234,12 @@ const changeStatus = async (req: Request, res: Response) => {
 // };
 
 
-const getPopularCars = async () => {
+const getPopularRents = async (req: Request, res: Response) => {
   try {
-    const popularCars = await Rent.aggregate([
+    const popularRents = await Rent.aggregate([
       {
         $lookup: {
-          from: "reservations",
+          from: "reservations",  
           localField: "_id",
           foreignField: "rent",
           as: "reservations",
@@ -261,25 +253,49 @@ const getPopularCars = async () => {
       {
         $match: { reservationCount: { $gt: 0 } },  
       },
+      {
+        $sort: { reservationCount: -1 },  
+      },
     ]);
 
-    const totalPopularCount = popularCars.length;  
-    const totalReservationCount = popularCars.reduce((sum, car) => sum + car.reservationCount, 0);  
+    const totalPopularRents = popularRents.length;
+    const totalReservationCount = popularRents.reduce((sum, rent) => sum + rent.reservationCount, 0);
 
-    console.log("Total Popular Cars:", totalPopularCount);
-    console.log("Total Reservation Count:", totalReservationCount);
-    console.log("Popular Cars Data:", popularCars);
+     popularRents.forEach((rent) => {
+      if (rent.imageUrls && Array.isArray(rent.imageUrls)) {
+        rent.imageUrls = rent.imageUrls.map((url: string) => {
+          if (url.startsWith("http")) return url;  
+          return `${process.env.BASE_URL}${url}`;  
+        });
+      } else {
+        rent.imageUrls = [];
+      }
+    });
+
+ 
+
+    res.status(200).json({
+      message: "Popular rents fetched successfully",
+      totalPopularRents,
+      totalReservationCount,
+      items: popularRents,
+    });
+
   } catch (e) {
-    console.error("Error while fetching popular cars:", e);
+    console.error("Error while fetching popular rents:", e);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
 
 
 const reservationController = {
   getAll,
   create,
   changeStatus,
-  getPopularCars,
+  getPopularRents,
 };
 
 export default reservationController;

@@ -81,9 +81,9 @@ const forgotPassword = async (req: Request, res: Response) => {
     await user.save();
 
     await transporter.sendMail({
-      from: '"Passport Auth 👻" <dadasovsuleyman126@gmail.com>', // sender address
-      to: email, // list of receivers
-      subject: "Reset Your Password", // Subject line
+      from: '"Passport Auth 👻" <leylababayka@gmail.com>', 
+      to: email, 
+      subject: "Reset Your Password", 
       html: `
         <!DOCTYPE html>
         <html>

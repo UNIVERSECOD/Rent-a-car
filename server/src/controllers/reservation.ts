@@ -122,8 +122,6 @@ const create = async (req: Request, res: Response) => {
   }
 };
 
-
-
 const changeStatus = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -184,55 +182,6 @@ const changeStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-//   try {
-//     const popularCars = await Rent.aggregate([
-//       {
-//         $lookup: {
-//           from: "reservations",
-//           localField: "_id",
-//           foreignField: "rent",
-//           as: "reservations",
-//         },
-//       },
-//       {
-//         $addFields: {
-//           reservationCount: { $size: "$reservations" },  
-//         },
-//       },
-//       {
-//         $match: { reservationCount: { $gt: 1 } },  
-//       },
-//       {
-//         $sort: { reservationCount: -1 }, 
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1,
-//           price: 1,
-//           discountPrice: 1,
-//           imageUrls: 1,
-//           reservationCount: 1,
-//         },
-//       },
-//     ]);
-
-
-//     const totalPopularCount = popularCars.length;
-
-//     res.status(200).json({
-//       message: "Popular cars retrieved successfully!",
-//       totalPopularCount: totalPopularCount,
-//       items: popularCars,
-//     });
-//   } catch (e) {
-//     console.error(e);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
 
 const getPopularRents = async (req: Request, res: Response) => {
   try {

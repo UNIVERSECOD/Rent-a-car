@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { paths } from "@/constants/paths";
 import TransmissionImg from "@/assets/icons/transmission.svg";

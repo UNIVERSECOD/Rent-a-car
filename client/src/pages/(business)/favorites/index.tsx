@@ -5,7 +5,6 @@ import { useAppSelector } from '@/hooks/redux';
 import favoriteService from '@/services/favorites';
 import { selectAuth } from '@/store/auth';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react'
 import { Navigate } from 'react-router-dom';
 
 const FavoritesPage = () => {

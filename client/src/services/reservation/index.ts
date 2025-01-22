@@ -1,5 +1,5 @@
 import axiosInstance from "../axiosInstance";
-import { GetAllRentPayload, getAllRentsResponse, RentPayload } from "../rent/types";
+import { getAllRentsResponse } from "../rent/types";
 import { ChangeReservationStatusPayload, CreateReservationPayload, GetAllReservationsResponse } from "./types";
 
 async function getAll() {

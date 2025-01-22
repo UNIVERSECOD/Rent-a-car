@@ -19,13 +19,25 @@ const getAll = async (req: Request, res: Response) => {
       .populate("pickUpLocation")
       .populate("dropOffLocation");
 
+      // reservations.forEach((reservation) => {
+      //   (reservation.rent as any).imageUrls = (
+      //     reservation.rent as any
+      //   ).imageUrls.map((url: string) => {
+      //     if (url.startsWith("http")) return url;
+      //     return `${process.env.BASE_URL}${url}`;
+      //   });
+      // });
+
       reservations.forEach((reservation) => {
-        (reservation.rent as any).imageUrls = (
-          reservation.rent as any
-        ).imageUrls.map((url: string) => {
-          if (url.startsWith("http")) return url;
-          return `${process.env.BASE_URL}${url}`;
-        });
+        if (reservation && reservation.rent) {  
+          const updatedImageUrls = (
+            reservation.rent as any
+          ).imageUrls.map((url: string) => {
+            if (url.startsWith("http")) return url;
+            return `${process.env.BASE_URL}${url}`;
+          });
+          (reservation.rent as any).imageUrls = updatedImageUrls;
+        }
       });
 
     res.status(200).json({

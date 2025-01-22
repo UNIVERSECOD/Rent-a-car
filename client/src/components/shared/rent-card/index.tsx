@@ -1,30 +1,26 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { paths } from "@/constants/paths";
-
-import HeartFilledImg from "@/assets/icons/heart-filled-red.svg";
-import HeartOutlinedImg from "@/assets/icons/heart-outlined.svg";
 import TransmissionImg from "@/assets/icons/transmission.svg";
 import PeopleImg from "@/assets/icons/people.svg";
 import FuelImg from "@/assets/icons/fuel.svg";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Rent } from "@/types";
-import { formatPrice } from "@/lib/utils";
-import { DialogTypeEnum, useDialog } from "@/hooks/useDialog";
 import { RenderIf } from "../RenderIf";
 import { useAppSelector } from "@/hooks/redux";
 import { selectAuth } from "@/store/auth";
+import {  Rent } from "@/types";
+import { DialogTypeEnum, useDialog } from "@/hooks/useDialog";
+import { formatPrice } from "@/lib/utils";
+import AddFavoriteIcon from "./components/Favorite";
 
 type Props = {
   rent: Rent;
 };
 
 export const RentCard = ({ rent }: Props) => {
-  const { user} = useAppSelector(selectAuth)
+  const { user } = useAppSelector(selectAuth);
   const { openDialog } = useDialog();
-  const [isLiked, setIsLiked] = useState(false);
-  const { _id, title, category, fuel, gear, imageUrls, capacity, price, discountPrice } = rent;
+  const { _id, title, category, fuel, gear, imageUrls, capacity, price, discountPrice, isFavorite } = rent;
   const mainImage = imageUrls[0];
 
   return (
@@ -41,9 +37,7 @@ export const RentCard = ({ rent }: Props) => {
             {category.title}
           </p>
         </div>
-        <button onClick={() => setIsLiked(!isLiked)} className="h-fit">
-          <img src={isLiked ? HeartFilledImg : HeartOutlinedImg} alt="heart" />
-        </button>
+        <AddFavoriteIcon isFavorite={isFavorite} rentId={rent._id}  />
       </div>
       <Link
         className="mt-8 lg:mt-12 relative cursor-pointer"
@@ -74,27 +68,25 @@ export const RentCard = ({ rent }: Props) => {
       </div>
       <div className="flex items-center justify-between mt-3 lg:mt-6">
         <div className="flex flex-col gap-x-1">
-          <RenderIf
-          condition={!!discountPrice}
-          >
-        <p className="text-muted-foreground text-sm font-bold line-through">
-          {formatPrice(price)}
-          
-        </p>
+          <RenderIf condition={!!discountPrice}>
+            <p className="text-muted-foreground text-sm font-bold line-through">
+              {formatPrice(price)}
+            </p>
           </RenderIf>
-        <p className="text-secondary-500 text-xl font-bold">
-          {formatPrice(discountPrice || price)}
-        </p>
-        </div>/
-          <span className="text-sm text-secondary-300">day</span>
+          <p className="text-secondary-500 text-xl font-bold">
+            {formatPrice(discountPrice || price)}
+          </p>
+        </div>
+        <span className="text-sm text-secondary-300">day</span>
         <Button asChild>
-          <Link to={paths.PAYMENT(_id)} 
-          onClick={(e) => {
-          if (!user) {
-            e.preventDefault();
-            openDialog(DialogTypeEnum.LOGIN)
-          }
-          }}
+          <Link
+            to={paths.PAYMENT(_id)}
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                openDialog(DialogTypeEnum.LOGIN);
+              }
+            }}
           >
             Rent Now
           </Link>

@@ -1,6 +1,7 @@
 export const paths = {
   HOME: "/",
   LIST: "/list",
+  Favorites: "/favorites",
   DETAIL: (id = ":id") => `/detail/${id}`,
   PAYMENT: (id = ":id") => `/payment/${id}`,
   RESERVATIONS: "/reservations",

@@ -139,9 +139,9 @@ const EditProfileDialog: React.FC<{
                             if (e.target && e.target.files) {
                               const file = e.target.files[0];
                               if (file) {
-                                const url = URL.createObjectURL(file);  // Preview the file
-                                form.setValue("avatar", url);  // Set the URL
-                                setImagePreview(url);  // Preview the file
+                                const url = URL.createObjectURL(file);  
+                                form.setValue("avatar", url);  
+                                setImagePreview(url);  
                               }
                             }
                           }}

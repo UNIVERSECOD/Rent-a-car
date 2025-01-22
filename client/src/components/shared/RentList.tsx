@@ -1,10 +1,10 @@
-import { RentCard } from "@/components/shared/rent-card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { RenderIf } from "./RenderIf";
 import { Rent } from "@/types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
+import { RentCard } from "./rent-card";
 
 type Props = {
   heading: string;

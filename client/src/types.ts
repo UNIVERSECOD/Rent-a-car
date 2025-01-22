@@ -41,6 +41,7 @@ export type Rent = {
   pickUpLocations: Location[];
   showInRecommendation: boolean;
   reviews: Review[];
+  isFavorite: boolean;
 };
 
 export type Reservation = {

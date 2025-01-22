@@ -33,7 +33,7 @@ export const NavbarActions = () => {
   return (
     <div className="flex items-center gap-3 lg:gap-5">
       <Link
-        to="/"
+        to={paths.Favorites}
         className="rounded-full border border-[#c3d4e966] opacity-80 hover:opacity-100 duration-75 p-2.5"
       >
         <img src={HeartIcon} alt="favorites icon" />

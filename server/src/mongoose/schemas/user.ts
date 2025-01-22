@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { SchemaTypes, Types } from "mongoose";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
   favorites: {
-    type: [Types.ObjectId],
+    type: [SchemaTypes.ObjectId],
     ref: "Rent",
     default: [],
   },

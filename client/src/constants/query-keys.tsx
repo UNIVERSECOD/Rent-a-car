@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
   ADMIN_CATEGORY_BY_ID: "admin-category-by-id",
   CATEGORIES: "categories",
   LOCATIONS: "locations",
+  FAVORITES: "favorites",
   RESERVATIONS: "reservations",
   RECOMMENDATION_RENTS: "recommendationRents",
   RENT_LIST: "rentList",

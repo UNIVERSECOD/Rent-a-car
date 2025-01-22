@@ -32,7 +32,7 @@ export const columns: ColumnDef<Location>[] = [
         const confirmed = window.confirm("Are you sure you want to delete this location?");
         if (confirmed) {
           try {
-            await locationService.remove(row.original._id); // API-ni çağırır
+            await locationService.remove(row.original._id); 
             alert("Location deleted successfully!");
           } catch (error) {
             alert("Failed to delete location!");

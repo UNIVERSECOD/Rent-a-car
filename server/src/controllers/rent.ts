@@ -4,6 +4,7 @@ import Category from "../mongoose/schemas/category";
 import Location from "../mongoose/schemas/location";
 import { deleteFiles, deleteFilesByPaths } from "../utils/file";
 import { RootFilterQuery } from "mongoose";
+import User from "../mongoose/schemas/user";
 
 const getAll = async (req: Request, res: Response) => {
   try {
@@ -20,6 +21,7 @@ const getAll = async (req: Request, res: Response) => {
       showInRecommendation,
     } = req.matchedData;
     // const { search } = req.query;
+    const userId = req.user?._id;
     const filter: RootFilterQuery<any> = {
       $or: [],
       $and: [],
@@ -101,6 +103,10 @@ const getAll = async (req: Request, res: Response) => {
 
     const count = await Rent.countDocuments(filter);
 
+    const userFavorites = userId
+      ? (await User.findById(userId))?.favorites.map((id) => id.toString()) || []
+      : [];
+
     res.status(200).json({
       message: "Rents retrieved successfully!",
       count,
@@ -108,6 +114,7 @@ const getAll = async (req: Request, res: Response) => {
       take,
       items: rents.map((rent) => ({
         ...rent.toObject(),
+        isFavorite: userFavorites.includes(rent._id.toString()),
         imageUrls: rent.imageUrls.map((url) => `${process.env.BASE_URL}${url}`),
       })),
     });

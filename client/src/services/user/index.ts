@@ -1,19 +1,37 @@
 import axiosInstance from "../axiosInstance";
-import { UpdateUserPayload, UpdateUserResponse } from "./types";
+import { UpdateUserResponse, getUserByIdResponse } from "./types";
 
 
-export async function updateUser( formData: UpdateUserPayload){
-// const formData = new FormData();
+export async function updateUser({
+    id,
+    formData,
+  }: {
+    id: string;
+    formData: FormData;
+  }) {
+    return await axiosInstance.put<UpdateUserResponse>(`/user/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 
-// formData.append("name", data.name);
+// export async function updateUser(formData: FormData) {
+//     const payload: UpdateUserPayload = {
+//         name: formData.get('name') as string,
+//         username: formData.get('username') as string,
+//         avatar: formData.get('avatar') as File | null,
+//     };
 
-// formData.append("surname", data.surname);
+//     return await axiosInstance.put<UpdateUserResponse>(`/user`, payload);
+// }
 
-// if (data.avatar) formData.append("avatar", data.avatar);
 
-    return await axiosInstance.put<UpdateUserResponse>(`/user`, formData);
-} 
+async function getById(id: string) {
+    return await axiosInstance.get<getUserByIdResponse>(`/user/${id}`);
+  }
 
 export const UserService = {
     updateUser,
+    getById,
 }

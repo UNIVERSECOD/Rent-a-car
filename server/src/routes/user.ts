@@ -8,11 +8,17 @@ import { updateUserSchema } from "../validation/user";
 const router = Router();
 
 router.put(
-    "/",
+    "/:id",
     authorize(),
     upload.single("avatar"),
     validateSchema(updateUserSchema),
     userController.update
+  );
+
+  router.get(
+    "/:id",
+    authorize(),
+    userController.getById
   );
 
 export default router;

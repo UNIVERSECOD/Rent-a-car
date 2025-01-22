@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { MAX_FILE_SIZE } from "@/constants";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,8 +32,6 @@ import categoryService from "@/services/category";
 import rentService from "@/services/rent";
 import { toast } from "sonner";
 import { paths } from "@/constants/paths";
-import { error } from "console";
-import { AxiosError } from "axios";
 import { AxiosResponseError } from "@/types";
 import { RenderIf } from "@/components/shared/RenderIf";
 

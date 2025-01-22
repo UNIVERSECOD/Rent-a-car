@@ -6,7 +6,7 @@ import EditProfileDialog from "./components/EditProfileDialog";
 
 const ProfileEditPage = () => {
   const { user } = useSelector(selectAuth) as {
-    user: { name: string; username: string; avatar?: string };
+    user: { _id: string, name: string; username: string; avatar?: string };
   };
 
   return (

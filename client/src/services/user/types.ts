@@ -1,12 +1,17 @@
 import { User } from "@/types";
 
-export type UpdateUserPayload = {
+export interface UpdateUserPayload {
   name: string;
   username: string;
-  avatar?: string | null;
+  avatar?: File | null;
 };
 
 export type UpdateUserResponse = {
   message: string;
   user?: User;
+};
+
+export type getUserByIdResponse = {
+  message: string;
+  item: User;
 };

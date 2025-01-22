@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,13 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { XIcon } from "lucide-react";
-import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { UserService } from "@/services/user";
-import { paths } from "@/constants/paths";
-import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { AxiosResponseError } from "@/types";
 
 const formSchema = z.object({
@@ -35,29 +31,28 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Surname must be at least 2 characters.",
   }),
-  avatar: z.string().optional(),
+  avatar: z.any(), 
 });
 
 const EditProfileDialog: React.FC<{
-  user: { name: string; username: string; avatar?: string | undefined };
+  user: { _id: string; name: string; username: string; avatar?: any };
 }> = ({ user }) => {
   const [imagePreview, setImagePreview] = useState(user?.avatar);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: user?.username,
       name: user?.name,
-      avatar: user?.avatar ?? "",
+      avatar: user?.avatar ?? null,
     },
   });
 
   const { mutate: mutateUpdate } = useMutation({
-    mutationFn: UserService.updateUser,
+    mutationFn: UserService.updateUser, 
     onSuccess: () => {
       toast.success("User updated successfully");
-      navigate(paths.HOME);
     },
     onError: (error: AxiosResponseError) => {
       toast.error(error.response?.data.message ?? "Something went wrong");
@@ -65,16 +60,17 @@ const EditProfileDialog: React.FC<{
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    mutateUpdate(values);
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("username", values.username);
+    if (values.avatar) {
+      formData.append("avatar", values.avatar);
+    }
+  
+    mutateUpdate({ id: user._id, formData }); 
     setIsOpen(false);
   }
-
-  useEffect(() => {
-    if (user?.avatar) {
-      setImagePreview(user.avatar);
-    }
-  }, [user]);
-
+  
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -120,10 +116,6 @@ const EditProfileDialog: React.FC<{
               {imagePreview ? (
                 <div className="relative h-24 w-fit mx-auto">
                   <img src={imagePreview} alt="Post" className="h-full" />
-                  <XIcon
-                    onClick={() => setImagePreview(undefined)}
-                    className="absolute right-0 top-0 cursor-pointer text-destructive"
-                  />
                 </div>
               ) : (
                 <FormField
@@ -131,20 +123,23 @@ const EditProfileDialog: React.FC<{
                   name="avatar"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Post Image</FormLabel>
+                      <FormLabel>Image</FormLabel>
                       <FormControl>
                         <Input
                           type="file"
                           onChange={(e) => {
-                            if (e.target && e.target.files) {
-                              const file = e.target.files[0];
-                              if (file) {
-                                const url = URL.createObjectURL(file);  
-                                form.setValue("avatar", url);  
-                                setImagePreview(url);  
-                              }
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              form.setValue("avatar", file);
+                              form.clearErrors("avatar");
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setImagePreview(reader.result as string);
+                              };
+                              reader.readAsDataURL(file);
                             }
                           }}
+                          accept="image/*"
                         />
                       </FormControl>
                       <FormMessage />
